@@ -22,6 +22,7 @@ type InportResponse struct {
 }
 
 type UsersResponse struct {
+	ID         int64       `json:"id_user"`     //
 	Username   string      `json:"username"`    //
 	Name       string      `json:"name"`        //
 	Email      string      `json:"email"`       //
@@ -29,4 +30,5 @@ type UsersResponse struct {
 	Country    string      `json:"country"`     //
 	Birthday   time.Time   `json:"birthday"`    //
 	WebProfile null.String `json:"web_profile"` //
+	Activated  bool        `json:"activated"`   //
 }

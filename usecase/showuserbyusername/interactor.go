@@ -33,6 +33,7 @@ func (r *showUserByUsernameInteractor) Execute(ctx context.Context, req InportRe
 		}
 
 		res = &InportResponse{
+			ID:         userObj.ID,
 			Username:   userObj.Username,
 			Name:       userObj.Name,
 			Email:      userObj.Email,
@@ -40,6 +41,7 @@ func (r *showUserByUsernameInteractor) Execute(ctx context.Context, req InportRe
 			Country:    userObj.Country,
 			Birthday:   userObj.Birthday,
 			WebProfile: userObj.WebProfile,
+			Activated:  userObj.ActivatedAt.Valid,
 		}
 
 		return nil

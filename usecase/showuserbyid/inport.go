@@ -19,6 +19,7 @@ type InportRequest struct {
 
 // InportResponse is response payload after running the usecase ShowUserByID
 type InportResponse struct {
+	ID         int64       `json:"id_user"`     //
 	Username   string      `json:"username"`    //
 	Name       string      `json:"name"`        //
 	Email      string      `json:"email"`       //
@@ -26,4 +27,5 @@ type InportResponse struct {
 	Country    string      `json:"country"`     //
 	Birthday   time.Time   `json:"birthday"`    //
 	WebProfile null.String `json:"web_profile"` //
+	Activated  bool        `json:"activated"`   //
 }

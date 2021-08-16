@@ -35,6 +35,7 @@ func (r *showAllUsersInteractor) Execute(ctx context.Context, req InportRequest)
 
 		for _, v := range userObj {
 			res.Users = append(res.Users, UsersResponse{
+				ID:         v.ID,
 				Username:   v.Username,
 				Name:       v.Name,
 				Email:      v.Email,
@@ -42,6 +43,7 @@ func (r *showAllUsersInteractor) Execute(ctx context.Context, req InportRequest)
 				Country:    v.Country,
 				Birthday:   v.Birthday,
 				WebProfile: v.WebProfile,
+				Activated:  v.ActivatedAt.Valid,
 			})
 		}
 
