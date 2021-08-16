@@ -2,13 +2,16 @@ package registry
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/raismaulana/blogP/application"
 	"github.com/raismaulana/blogP/controller/restapi"
 	"github.com/raismaulana/blogP/gateway/indatabase"
+	"github.com/raismaulana/blogP/infrastructure/envconfig"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/server"
+	"github.com/raismaulana/blogP/infrastructure/util"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
 	"github.com/raismaulana/blogP/usecase/showallusers"
@@ -28,20 +31,39 @@ type usingdb struct {
 
 func NewUsingdb() func() application.RegistryContract {
 	return func() application.RegistryContract {
+		env, err := envconfig.NewEnvConfig()
+		if err != nil {
+			log.Error(context.Background(), "Config Problem %v", err.Error())
+			os.Exit(1)
+		}
+		log.Info(context.Background(), util.MustJSON(env))
+		log.Info(context.Background(), env.SMTPSender+" <"+env.SMTPEmail+">")
+		// secretKey := viper.GetString("secretkey")
+		// userToken, err := token.NewJWTToken(secretKey)
+		// if err != nil {
+		// 	log.Error(context.Background(), "Secret Key Problem %v", err.Error())
+		// 	os.Exit(1)
+		// }
 
-		dsn := "host=127.0.0.1 user=postgres password=postgres dbname=blog port=5432 sslmode=disable TimeZone=Asia/Jakarta"
+		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
+			env.DBHost,
+			env.DBUser,
+			env.DBPassword,
+			env.DBName,
+			env.DBPort,
+		)
 		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err != nil {
 			panic("failed to connect database")
 		}
 
-		httpHandler, err := server.NewGinHTTPHandler(":8080")
+		httpHandler, err := server.NewGinHTTPHandler(":" + env.AppPort)
 		if err != nil {
 			log.Error(context.Background(), "%v", err.Error())
 			os.Exit(1)
 		}
 
-		datasource, err := indatabase.NewInDatabaseGateway(db)
+		datasource, err := indatabase.NewInDatabaseGateway(env, db)
 		if err != nil {
 			log.Error(context.Background(), "%v", err.Error())
 			os.Exit(1)
@@ -50,6 +72,7 @@ func NewUsingdb() func() application.RegistryContract {
 		return &usingdb{
 			GinHTTPHandler: httpHandler,
 			restapiController: restapi.Controller{
+				Env:                      env,
 				Router:                   httpHandler.Router,
 				CreateUserInport:         createuser.NewUsecase(datasource),
 				ShowUserByIDInport:       showuserbyid.NewUsecase(datasource),

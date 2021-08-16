@@ -2,6 +2,7 @@ package restapi
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/raismaulana/blogP/infrastructure/envconfig"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
 	"github.com/raismaulana/blogP/usecase/showallusers"
@@ -12,6 +13,7 @@ import (
 )
 
 type Controller struct {
+	Env                      *envconfig.EnvConfig
 	Router                   gin.IRouter
 	CreateUserInport         createuser.Inport
 	ShowUserByIDInport       showuserbyid.Inport
@@ -24,11 +26,11 @@ type Controller struct {
 
 // RegisterRouter registering all the router
 func (r *Controller) RegisterRouter() {
-	r.Router.POST("/user/create", r.authorized(), r.CreateUserHandler(r.CreateUserInport))
-	r.Router.GET("/user/id/:id_user", r.authorized(), r.showUserByIDHandler(r.ShowUserByIDInport))
-	r.Router.GET("/user/email/:email", r.authorized(), r.showUserByEmailHandler(r.ShowUserByEmailInport))
-	r.Router.GET("/user/username/:username", r.authorized(), r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
-	r.Router.GET("/user/all", r.authorized(), r.showAllUsersHandler(r.ShowAllUsersInport))
-	r.Router.PUT("/user/update", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
-	r.Router.DELETE("/user/delete/:id_user", r.authorized(), r.deleteUserHandler(r.DeleteUserInport))
+	r.Router.POST("/users", r.authorized(), r.CreateUserHandler(r.CreateUserInport))
+	r.Router.GET("/users/:id_user", r.authorized(), r.showUserByIDHandler(r.ShowUserByIDInport))
+	r.Router.GET("/users/email/:email", r.authorized(), r.showUserByEmailHandler(r.ShowUserByEmailInport))
+	r.Router.GET("/users/username/:username", r.authorized(), r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
+	r.Router.GET("/users", r.authorized(), r.showAllUsersHandler(r.ShowAllUsersInport))
+	r.Router.PATCH("/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
+	r.Router.DELETE("/users/:id_user", r.authorized(), r.deleteUserHandler(r.DeleteUserInport))
 }
