@@ -27,11 +27,8 @@ func (r *showUserByEmailInteractor) Execute(ctx context.Context, req InportReque
 
 	// code your usecase definition here ...
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		userObj, err := r.outport.FindUserByEmail(ctx, req.Email)
+		userObj, err := r.outport.FindUserByEmail(ctx, req.Email, true)
 		if err != nil {
-			return err
-		}
-		if userObj == nil {
 			return apperror.ObjectNotFound.Var(userObj)
 		}
 

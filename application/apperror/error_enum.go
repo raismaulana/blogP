@@ -18,7 +18,8 @@ const (
 	CountryMustNotEmpty            ErrorType = "ER400 country must not empty"            // used by entity/user
 	BirthdayMustNotEmpty           ErrorType = "ER400 birthday must not empty"           // used by entity/user
 	WebProfileMustNotEmpty         ErrorType = "ER400 web profile must not empty"        // used by entity/user
-	EmailAlreadyUsed               ErrorType = "ER409 email already used"                // used by entity/user
-	UsernameAlreadyUsed            ErrorType = "ER409 username already used"             // used by entity/user
+	EmailAlreadyUsed               ErrorType = "ER400 email already used"                // used by entity/user
+	UsernameAlreadyUsed            ErrorType = "ER400 username already used"             // used by entity/user
 	IdentifierMustNotEmpty         ErrorType = "ER400 identifier must not empty"         //
+	NumberOnlyParam                ErrorType = "ER400 number only param"                 //
 )

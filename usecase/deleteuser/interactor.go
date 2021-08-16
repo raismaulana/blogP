@@ -3,6 +3,7 @@ package deleteuser
 import (
 	"context"
 
+	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/domain/repository"
 )
 
@@ -26,9 +27,9 @@ func (r *deleteUserInteractor) Execute(ctx context.Context, req InportRequest) (
 
 	// code your usecase definition here ...
 	err := repository.WithTransaction(ctx, r.outport, func(ctx context.Context) error {
-		userObj, err := r.outport.FindUserByID(ctx, req.ID)
+		userObj, err := r.outport.FindUserByID(ctx, req.ID, true)
 		if err != nil {
-			return err
+			return apperror.ObjectNotFound.Var(userObj)
 		}
 
 		err = r.outport.DeleteUser(ctx, userObj)

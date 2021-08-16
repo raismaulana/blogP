@@ -27,11 +27,8 @@ func (r *showUserByIDInteractor) Execute(ctx context.Context, req InportRequest)
 
 	// code your usecase definition here ...
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		userObj, err := r.outport.FindUserByID(ctx, req.ID)
+		userObj, err := r.outport.FindUserByID(ctx, req.ID, true)
 		if err != nil {
-			return err
-		}
-		if userObj == nil {
 			return apperror.ObjectNotFound.Var(userObj)
 		}
 

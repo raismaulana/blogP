@@ -2,6 +2,7 @@ package restapi
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/raismaulana/blogP/application/apperror"
@@ -17,13 +18,21 @@ func (r *Controller) updateUserHandler(inputPort updateuser.Inport) gin.HandlerF
 
 		ctx := log.Context(c.Request.Context())
 
+		id, err := strconv.ParseInt(c.Param("id_user"), 10, 64)
+		if err != nil {
+			log.Error(ctx, err.Error())
+			c.JSON(http.StatusNotFound, NewErrorResponse(apperror.NumberOnlyParam))
+			return
+		}
+
 		var req updateuser.InportRequest
-		if err := c.BindJSON(&req); err != nil {
+		if err = c.BindJSON(&req); err != nil {
 			newErr := apperror.FailUnmarshalResponseBodyError
 			log.Error(ctx, err.Error())
 			c.JSON(http.StatusBadRequest, NewErrorResponse(newErr))
 			return
 		}
+		req.ID = id
 
 		log.Info(ctx, util.MustJSON(req))
 
