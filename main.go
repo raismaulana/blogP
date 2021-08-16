@@ -21,7 +21,7 @@ func main() {
 	} else {
 		fmt.Println("You may try this app name:")
 		for appName := range appMap {
-			fmt.Printf("userprofile %s\n", appName)
+			fmt.Printf("%s\n", appName)
 		}
 	}
 
