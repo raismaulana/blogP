@@ -12,6 +12,7 @@ import (
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/server"
 	"github.com/raismaulana/blogP/infrastructure/util"
+	"github.com/raismaulana/blogP/usecase/activationuser"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
 	"github.com/raismaulana/blogP/usecase/showallusers"
@@ -81,6 +82,7 @@ func NewUsingdb() func() application.RegistryContract {
 				ShowAllUsersInport:       showallusers.NewUsecase(datasource),
 				UpdateUserInport:         updateuser.NewUsecase(datasource),
 				DeleteUserInport:         deleteuser.NewUsecase(datasource),
+				ActivationUserInport:     activationuser.NewUsecase(datasource),
 			},
 			// TODO another controller will added here ... <<<<<<
 		}

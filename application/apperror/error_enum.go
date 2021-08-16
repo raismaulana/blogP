@@ -22,4 +22,8 @@ const (
 	UsernameAlreadyUsed            ErrorType = "ER400 username already used"             // used by entity/user
 	IdentifierMustNotEmpty         ErrorType = "ER400 identifier must not empty"         //
 	NumberOnlyParam                ErrorType = "ER400 number only param"                 //
+	UserIsAlreadyActivated         ErrorType = "ER400 user is already activated"         //
+	Unknown                        ErrorType = "ER400 unknown"
+	InvalidActivationCode          ErrorType = "ER1000 invalid activation code" //
+	InvalidEmail                   ErrorType = "ER1000 invalid email"           //
 )

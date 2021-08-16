@@ -3,6 +3,7 @@ package restapi
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
+	"github.com/raismaulana/blogP/usecase/activationuser"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
 	"github.com/raismaulana/blogP/usecase/showallusers"
@@ -22,6 +23,7 @@ type Controller struct {
 	ShowAllUsersInport       showallusers.Inport
 	UpdateUserInport         updateuser.Inport
 	DeleteUserInport         deleteuser.Inport
+	ActivationUserInport     activationuser.Inport
 }
 
 // RegisterRouter registering all the router
@@ -33,4 +35,5 @@ func (r *Controller) RegisterRouter() {
 	r.Router.GET("/users", r.authorized(), r.showAllUsersHandler(r.ShowAllUsersInport))
 	r.Router.PATCH("/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
 	r.Router.DELETE("/users/:id_user", r.authorized(), r.deleteUserHandler(r.DeleteUserInport))
+	r.Router.PATCH("/users/:id_user/activation", r.authorized(), r.activationUserHandler(r.ActivationUserInport))
 }

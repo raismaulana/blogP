@@ -1,6 +1,13 @@
 package activationuser
 
-import "context"
+import (
+	"context"
+	"time"
+
+	"github.com/raismaulana/blogP/application/apperror"
+	"github.com/raismaulana/blogP/domain/repository"
+	"gopkg.in/guregu/null.v4"
+)
 
 //go:generate mockery --name Outport -output mocks/
 
@@ -20,8 +27,30 @@ func (r *activationUserInteractor) Execute(ctx context.Context, req InportReques
 
 	res := &InportResponse{}
 
-	// code your usecase definition here ...
-	//!
+	err := repository.WithTransaction(ctx, r.outport, func(ctx context.Context) error {
+		userObj, err := r.outport.FindUserByID(ctx, req.ID, true)
+		if err != nil {
+			return apperror.ObjectNotFound.Var(userObj)
+		}
+
+		err = userObj.ValidateActivation(req.Email, req.ActivationCode)
+		if err != nil {
+			return err
+		}
+
+		userObj.ActivatedAt = null.NewTime(time.Now(), true)
+
+		err = r.outport.SaveUser(ctx, userObj)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
 
 	return res, nil
 }

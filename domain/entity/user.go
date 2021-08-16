@@ -110,3 +110,19 @@ func (r *User) UpdateUser(req UserUpdateRequest) error {
 
 	return nil
 }
+
+func (r *User) ValidateActivation(email string, activationCode string) error {
+	if r.ActivatedAt.Valid {
+		return apperror.UserIsAlreadyActivated
+	}
+
+	if r.Email != email {
+		return apperror.InvalidEmail
+	}
+
+	if activationCode == "" {
+		return apperror.InvalidActivationCode
+	}
+
+	return nil
+}
