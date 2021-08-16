@@ -13,4 +13,7 @@ type Outport interface {
 	repository.SaveUserRepo
 	repository.TransactionDB
 	service.HashPasswordService
+	service.SendMailService
+	service.GenerateRandomStringService
+	service.BuildMailActivationAccountService
 }
