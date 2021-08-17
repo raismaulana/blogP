@@ -69,7 +69,14 @@ func (r *SharedGateway) BuildMailActivationAccount(ctx context.Context, req serv
 	var mail service.BuildMailActivationAccountServiceResponse
 	mail.To = req.To
 	mail.Subject = "Account Activation"
-	mail.Body = fmt.Sprintf("<p>Hello %s, your activation code is %s or click link below </p><p><a href=\"%s/users/%v/activation?email=%s&activation_code=%s\">click me.</a></p>", req.Name, req.ActivationToken, r.Env.AppBaseURL, req.ID, req.To, req.ActivationToken)
+	mail.Body = fmt.Sprintf("<p>Hello %s, your activation code is %s or click link below </p><p><a href=\"%susers/%v/activation?email=%s&activation_code=%s\">click me.</a></p>",
+		req.Name,
+		req.ActivationToken,
+		r.Env.AppBaseURL,
+		req.ID,
+		req.To,
+		req.ActivationToken,
+	)
 
 	return &mail
 }
