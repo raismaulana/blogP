@@ -28,12 +28,12 @@ type Controller struct {
 
 // RegisterRouter registering all the router
 func (r *Controller) RegisterRouter() {
-	r.Router.POST("/users", r.authorized(), r.CreateUserHandler(r.CreateUserInport))
+	r.Router.DELETE("/users/:id_user", r.authorized(), r.deleteUserHandler(r.DeleteUserInport))
+	r.Router.GET("/users", r.authorized(), r.showAllUsersHandler(r.ShowAllUsersInport))
 	r.Router.GET("/users/:id_user", r.authorized(), r.showUserByIDHandler(r.ShowUserByIDInport))
+	r.Router.GET("/users/:id_user/activation", r.authorized(), r.activationUserHandler(r.ActivationUserInport))
 	r.Router.GET("/users/email/:email", r.authorized(), r.showUserByEmailHandler(r.ShowUserByEmailInport))
 	r.Router.GET("/users/username/:username", r.authorized(), r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
-	r.Router.GET("/users", r.authorized(), r.showAllUsersHandler(r.ShowAllUsersInport))
-	r.Router.PATCH("/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
-	r.Router.DELETE("/users/:id_user", r.authorized(), r.deleteUserHandler(r.DeleteUserInport))
-	r.Router.PATCH("/users/:id_user/activation", r.authorized(), r.activationUserHandler(r.ActivationUserInport))
+	r.Router.POST("/users", r.authorized(), r.CreateUserHandler(r.CreateUserInport))
+	r.Router.PUT("/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
 }

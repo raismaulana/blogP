@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/raismaulana/blogP/application"
 	"github.com/raismaulana/blogP/controller/restapi"
-	"github.com/raismaulana/blogP/gateway/indatabase"
+	"github.com/raismaulana/blogP/gateway/master"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/server"
-	"github.com/raismaulana/blogP/infrastructure/util"
 	"github.com/raismaulana/blogP/usecase/activationuser"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
@@ -32,13 +32,13 @@ type usingdb struct {
 
 func NewUsingdb() func() application.RegistryContract {
 	return func() application.RegistryContract {
+		ctx := context.Background()
+
 		env, err := envconfig.NewEnvConfig()
 		if err != nil {
-			log.Error(context.Background(), "Config Problem %v", err.Error())
+			log.Error(ctx, "Config Problem %v", err.Error())
 			os.Exit(1)
 		}
-		log.Info(context.Background(), util.MustJSON(env))
-		log.Info(context.Background(), env.SMTPSender+" <"+env.SMTPEmail+">")
 		// secretKey := viper.GetString("secretkey")
 		// userToken, err := token.NewJWTToken(secretKey)
 		// if err != nil {
@@ -58,15 +58,26 @@ func NewUsingdb() func() application.RegistryContract {
 			panic("failed to connect database")
 		}
 
-		httpHandler, err := server.NewGinHTTPHandler(":" + env.AppPort)
+		rdb := redis.NewClient(&redis.Options{
+			Addr:     env.RedisHost + ":" + env.RedisPort,
+			Password: env.RedisPassword, // no password set
+			DB:       env.RedisDB,       // use default DB
+		})
+		_, err = rdb.Ping(ctx).Result()
 		if err != nil {
-			log.Error(context.Background(), "%v", err.Error())
+			log.Error(ctx, "%v", err.Error())
 			os.Exit(1)
 		}
 
-		datasource, err := indatabase.NewInDatabaseGateway(env, db)
+		httpHandler, err := server.NewGinHTTPHandler(":" + env.AppPort)
 		if err != nil {
-			log.Error(context.Background(), "%v", err.Error())
+			log.Error(ctx, "%v", err.Error())
+			os.Exit(1)
+		}
+
+		datasource, err := master.NewMasterGateway(env, db, rdb)
+		if err != nil {
+			log.Error(ctx, "%v", err.Error())
 			os.Exit(1)
 		}
 

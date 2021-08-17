@@ -16,6 +16,12 @@ type SharedGateway struct {
 	Env *envconfig.EnvConfig
 }
 
+func NewSharedGateway(env *envconfig.EnvConfig) *SharedGateway {
+	return &SharedGateway{
+		Env: env,
+	}
+}
+
 func (r *SharedGateway) HashPassword(ctx context.Context, plainPassword string) (string, error) {
 	log.Info(ctx, "called")
 
@@ -37,7 +43,7 @@ func (r *SharedGateway) SendMail(ctx context.Context, req service.SendMailServic
 	log.Info(ctx, "called")
 
 	mailer := gomail.NewMessage()
-	mailer.SetHeader("From", r.Env.SMTPSender+" <"+r.Env.SMTPEmail+">")
+	mailer.SetHeader("From", r.Env.SMTPSender)
 	mailer.SetHeader("To", req.To)
 	mailer.SetHeader("Subject", req.Subject)
 	mailer.SetBody("text/html", req.Body)

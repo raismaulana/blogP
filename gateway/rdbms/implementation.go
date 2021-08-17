@@ -1,44 +1,38 @@
-package indatabase
+package rdbms
 
 import (
 	"context"
 
 	"github.com/raismaulana/blogP/domain/entity"
-	"github.com/raismaulana/blogP/gateway/shared"
 	"github.com/raismaulana/blogP/infrastructure/database"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
 	"github.com/raismaulana/blogP/infrastructure/log"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
-type inDatabaseGateway struct {
+type RDBMSGateway struct {
 	database.GormReadOnlyImpl
 	database.GormTransactionImpl
-	shared.SharedGateway
 }
 
-// NewInDatabaseGateway ...
-func NewInDatabaseGateway(env *envconfig.EnvConfig, db *gorm.DB) (*inDatabaseGateway, error) {
+// NewRDBMSGateway ...
+func NewRDBMSGateway(env *envconfig.EnvConfig, db *gorm.DB) (*RDBMSGateway, error) {
 	err := db.AutoMigrate(&entity.User{})
 	if err != nil {
 		return nil, err
 	}
 
-	return &inDatabaseGateway{
+	return &RDBMSGateway{
 		GormReadOnlyImpl: database.GormReadOnlyImpl{
 			DB: db,
 		},
 		GormTransactionImpl: database.GormTransactionImpl{
 			DB: db,
 		},
-		SharedGateway: shared.SharedGateway{
-			Env: env,
-		},
 	}, nil
 }
 
-func (r *inDatabaseGateway) SaveUser(ctx context.Context, obj *entity.User) error {
+func (r *RDBMSGateway) SaveUser(ctx context.Context, obj *entity.User) error {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -55,18 +49,7 @@ func (r *inDatabaseGateway) SaveUser(ctx context.Context, obj *entity.User) erro
 	return nil
 }
 
-func (r *inDatabaseGateway) HashPassword(ctx context.Context, plainPassword string) (string, error) {
-	log.Info(ctx, "called")
-
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(plainPassword), 10)
-	if err != nil {
-		return "", err
-	}
-
-	return string(hashedPassword), nil
-}
-
-func (r *inDatabaseGateway) FindUserByUsername(ctx context.Context, username string, scope bool) (*entity.User, error) {
+func (r *RDBMSGateway) FindUserByUsername(ctx context.Context, username string, scope bool) (*entity.User, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -88,7 +71,7 @@ func (r *inDatabaseGateway) FindUserByUsername(ctx context.Context, username str
 	return &user, nil
 }
 
-func (r *inDatabaseGateway) FindUserByEmail(ctx context.Context, email string, scope bool) (*entity.User, error) {
+func (r *RDBMSGateway) FindUserByEmail(ctx context.Context, email string, scope bool) (*entity.User, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -111,7 +94,7 @@ func (r *inDatabaseGateway) FindUserByEmail(ctx context.Context, email string, s
 	return &user, nil
 }
 
-func (r *inDatabaseGateway) FindUserByID(ctx context.Context, ID int64, scope bool) (*entity.User, error) {
+func (r *RDBMSGateway) FindUserByID(ctx context.Context, ID int64, scope bool) (*entity.User, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -133,7 +116,7 @@ func (r *inDatabaseGateway) FindUserByID(ctx context.Context, ID int64, scope bo
 	return &user, nil
 }
 
-func (r *inDatabaseGateway) FetchUsers(ctx context.Context, scope bool) ([]*entity.User, error) {
+func (r *RDBMSGateway) FetchUsers(ctx context.Context, scope bool) ([]*entity.User, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -154,7 +137,7 @@ func (r *inDatabaseGateway) FetchUsers(ctx context.Context, scope bool) ([]*enti
 	return objs, nil
 }
 
-func (r *inDatabaseGateway) DeleteUser(ctx context.Context, obj *entity.User) error {
+func (r *RDBMSGateway) DeleteUser(ctx context.Context, obj *entity.User) error {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
