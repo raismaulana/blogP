@@ -15,6 +15,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/activationuser"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
+	"github.com/raismaulana/blogP/usecase/resetactivationuser"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
 	"github.com/raismaulana/blogP/usecase/showuserbyid"
@@ -84,16 +85,17 @@ func NewUsingdb() func() application.RegistryContract {
 		return &usingdb{
 			GinHTTPHandler: httpHandler,
 			restapiController: restapi.Controller{
-				Env:                      env,
-				Router:                   httpHandler.Router,
-				CreateUserInport:         createuser.NewUsecase(datasource),
-				ShowUserByIDInport:       showuserbyid.NewUsecase(datasource),
-				ShowUserByEmailInport:    showuserbyemail.NewUsecase(datasource),
-				ShowUserByUsernameInport: showuserbyusername.NewUsecase(datasource),
-				ShowAllUsersInport:       showallusers.NewUsecase(datasource),
-				UpdateUserInport:         updateuser.NewUsecase(datasource),
-				DeleteUserInport:         deleteuser.NewUsecase(datasource),
-				ActivationUserInport:     activationuser.NewUsecase(datasource),
+				Env:                       env,
+				Router:                    httpHandler.Router,
+				CreateUserInport:          createuser.NewUsecase(datasource),
+				ShowUserByIDInport:        showuserbyid.NewUsecase(datasource),
+				ShowUserByEmailInport:     showuserbyemail.NewUsecase(datasource),
+				ShowUserByUsernameInport:  showuserbyusername.NewUsecase(datasource),
+				ShowAllUsersInport:        showallusers.NewUsecase(datasource),
+				UpdateUserInport:          updateuser.NewUsecase(datasource),
+				DeleteUserInport:          deleteuser.NewUsecase(datasource),
+				ActivationUserInport:      activationuser.NewUsecase(datasource),
+				ResetActivationUserInport: resetactivationuser.NewUsecase(datasource),
 			},
 			// TODO another controller will added here ... <<<<<<
 		}

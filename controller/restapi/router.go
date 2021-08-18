@@ -6,6 +6,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/activationuser"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
+	"github.com/raismaulana/blogP/usecase/resetactivationuser"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
 	"github.com/raismaulana/blogP/usecase/showuserbyid"
@@ -14,16 +15,17 @@ import (
 )
 
 type Controller struct {
-	Env                      *envconfig.EnvConfig
-	Router                   gin.IRouter
-	CreateUserInport         createuser.Inport
-	ShowUserByIDInport       showuserbyid.Inport
-	ShowUserByEmailInport    showuserbyemail.Inport
-	ShowUserByUsernameInport showuserbyusername.Inport
-	ShowAllUsersInport       showallusers.Inport
-	UpdateUserInport         updateuser.Inport
-	DeleteUserInport         deleteuser.Inport
-	ActivationUserInport     activationuser.Inport
+	Env                       *envconfig.EnvConfig
+	Router                    gin.IRouter
+	CreateUserInport          createuser.Inport
+	ShowUserByIDInport        showuserbyid.Inport
+	ShowUserByEmailInport     showuserbyemail.Inport
+	ShowUserByUsernameInport  showuserbyusername.Inport
+	ShowAllUsersInport        showallusers.Inport
+	UpdateUserInport          updateuser.Inport
+	DeleteUserInport          deleteuser.Inport
+	ActivationUserInport      activationuser.Inport
+	ResetActivationUserInport resetactivationuser.Inport
 }
 
 // RegisterRouter registering all the router
@@ -36,4 +38,5 @@ func (r *Controller) RegisterRouter() {
 	r.Router.GET("/users/username/:username", r.authorized(), r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
 	r.Router.POST("/users", r.authorized(), r.CreateUserHandler(r.CreateUserInport))
 	r.Router.PUT("/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
+	r.Router.GET("/users/:id_user/re-activation", r.authorized(), r.resetActivationUserHandler(r.ResetActivationUserInport))
 }

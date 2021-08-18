@@ -6,7 +6,7 @@ type HashPasswordService interface {
 	HashPassword(ctx context.Context, plainPassword string) (string, error)
 }
 type SendMailService interface {
-	SendMail(ctx context.Context, req SendMailServiceRequest)
+	SendMail(ctx context.Context, req SendMailServiceRequest) error
 }
 
 type SendMailServiceRequest struct {

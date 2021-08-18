@@ -39,7 +39,7 @@ func (r *SharedGateway) GenerateRandomString(ctx context.Context) string {
 	return uuid.NewString()
 }
 
-func (r *SharedGateway) SendMail(ctx context.Context, req service.SendMailServiceRequest) {
+func (r *SharedGateway) SendMail(ctx context.Context, req service.SendMailServiceRequest) error {
 	log.Info(ctx, "called")
 
 	mailer := gomail.NewMessage()
@@ -58,9 +58,11 @@ func (r *SharedGateway) SendMail(ctx context.Context, req service.SendMailServic
 	err := dialer.DialAndSend(mailer)
 	if err != nil {
 		log.Error(ctx, err.Error())
-		return
+		return err
 	}
 	log.Info(ctx, "Mail sent")
+
+	return nil
 }
 
 func (r *SharedGateway) BuildMailActivationAccount(ctx context.Context, req service.BuildMailActivationAccountServiceRequest) *service.BuildMailActivationAccountServiceResponse {
