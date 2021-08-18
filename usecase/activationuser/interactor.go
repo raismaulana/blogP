@@ -30,12 +30,19 @@ func (r *activationUserInteractor) Execute(ctx context.Context, req InportReques
 	err := repository.WithTransaction(ctx, r.outport, func(ctx context.Context) error {
 		userObj, err := r.outport.FindUserByID(ctx, req.ID, true)
 		if err != nil {
-			return apperror.ObjectNotFound.Var(userObj)
+			return apperror.ObjectNotFound.Var(userObj.ID)
 		}
 
 		err = userObj.ValidateActivation(req.Email, req.ActivationCode)
 		if err != nil {
 			return err
+		}
+
+		key := userObj.RDBKeyActivationUser()
+		RDBActivationCode, err := r.outport.RDBGet(ctx, key)
+
+		if RDBActivationCode != req.ActivationCode {
+			return apperror.ActivationCodeIsIncorrectOrExpired
 		}
 
 		userObj.ActivatedAt = null.NewTime(time.Now(), true)

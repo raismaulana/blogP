@@ -2,11 +2,13 @@ package createuser
 
 import (
 	"context"
+	"time"
 
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/domain/entity"
 	"github.com/raismaulana/blogP/domain/repository"
 	"github.com/raismaulana/blogP/domain/service"
+	"github.com/raismaulana/blogP/infrastructure/log"
 )
 
 //go:generate mockery --name Outport -output mocks/
@@ -26,6 +28,7 @@ func NewUsecase(outputPort Outport) Inport {
 func (r *createUserInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
 
 	res := &InportResponse{}
+	mail := &service.BuildMailActivationAccountServiceResponse{}
 
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
 		existingUser, err := r.outport.FindUserByUsername(ctx, req.Username, false)
@@ -40,11 +43,10 @@ func (r *createUserInteractor) Execute(ctx context.Context, req InportRequest) (
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}
-	var insertID int64
+
 	err = repository.WithTransaction(ctx, r.outport, func(ctx context.Context) error {
 
 		hashedPassword, err := r.outport.HashPassword(ctx, req.Password)
@@ -70,19 +72,28 @@ func (r *createUserInteractor) Execute(ctx context.Context, req InportRequest) (
 		if err != nil {
 			return err
 		}
-		insertID = userObj.ID
+
+		RDBkey := userObj.RDBKeyActivationUser()
+		RDBvalue := r.outport.GenerateRandomString(ctx)
+
+		err = r.outport.RDBSet(ctx, RDBkey, RDBvalue, time.Hour*72)
+		if err != nil {
+			log.Error(ctx, err.Error())
+		}
+
+		mail = r.outport.BuildMailActivationAccount(ctx, service.BuildMailActivationAccountServiceRequest{
+			ID:              userObj.ID,
+			To:              userObj.Email,
+			Name:            userObj.Name,
+			ActivationToken: RDBvalue,
+		})
+
 		return nil
 	})
+
 	if err != nil {
 		return nil, err
 	}
-
-	mail := r.outport.BuildMailActivationAccount(ctx, service.BuildMailActivationAccountServiceRequest{
-		ID:              insertID,
-		To:              req.Email,
-		Name:            req.Name,
-		ActivationToken: r.outport.GenerateRandomString(ctx),
-	})
 
 	go r.outport.SendMail(ctx, service.SendMailServiceRequest{
 		To:      mail.To,

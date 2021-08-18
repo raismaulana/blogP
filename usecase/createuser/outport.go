@@ -16,4 +16,5 @@ type Outport interface {
 	service.SendMailService
 	service.GenerateRandomStringService
 	service.BuildMailActivationAccountService
+	repository.RDBSetRepo
 }

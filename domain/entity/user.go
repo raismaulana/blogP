@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
@@ -125,4 +126,8 @@ func (r *User) ValidateActivation(email string, activationCode string) error {
 	}
 
 	return nil
+}
+
+func (r *User) RDBKeyActivationUser() string {
+	return fmt.Sprintf("users:%v:%s:activation-code", r.ID, r.Email)
 }

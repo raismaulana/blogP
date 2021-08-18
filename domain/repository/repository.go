@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"github.com/raismaulana/blogP/domain/entity"
 )
@@ -28,4 +29,12 @@ type FetchUsersRepo interface {
 
 type DeleteUserRepo interface {
 	DeleteUser(ctx context.Context, ID *entity.User) error
+}
+
+type RDBSetRepo interface {
+	RDBSet(ctx context.Context, RDBkey string, value interface{}, expiration time.Duration) error
+}
+
+type RDBGetRepo interface {
+	RDBGet(ctx context.Context, RDBkey string) (string, error)
 }
