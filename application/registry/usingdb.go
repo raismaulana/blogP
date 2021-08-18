@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/raismaulana/blogP/application"
-	"github.com/raismaulana/blogP/controller/restapi"
+	"github.com/raismaulana/blogP/controller/userapi"
 	"github.com/raismaulana/blogP/gateway/master"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
 	"github.com/raismaulana/blogP/infrastructure/log"
@@ -27,7 +27,7 @@ import (
 
 type usingdb struct {
 	server.GinHTTPHandler
-	restapiController restapi.Controller
+	restapiController userapi.Controller
 	// TODO Another controller will added here ... <<<<<<
 }
 
@@ -84,7 +84,7 @@ func NewUsingdb() func() application.RegistryContract {
 
 		return &usingdb{
 			GinHTTPHandler: httpHandler,
-			restapiController: restapi.Controller{
+			restapiController: userapi.Controller{
 				Env:                       env,
 				Router:                    httpHandler.Router,
 				CreateUserInport:          createuser.NewUsecase(datasource),

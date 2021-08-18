@@ -1,4 +1,4 @@
-package restapi
+package userapi
 
 import (
 	"net/http"
@@ -8,11 +8,11 @@ import (
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/showuserbyid"
+	"github.com/raismaulana/blogP/usecase/activationuser"
 )
 
-// showUserByIDHandler ...
-func (r *Controller) showUserByIDHandler(inputPort showuserbyid.Inport) gin.HandlerFunc {
+// activationUserHandler ...
+func (r *Controller) activationUserHandler(inputPort activationuser.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -21,20 +21,25 @@ func (r *Controller) showUserByIDHandler(inputPort showuserbyid.Inport) gin.Hand
 		id, err := strconv.ParseInt(c.Param("id_user"), 10, 64)
 		if err != nil {
 			log.Error(ctx, err.Error())
-			c.JSON(http.StatusBadRequest, NewErrorResponse(apperror.NumberOnlyParam))
+			c.JSON(http.StatusNotFound, NewErrorResponse(apperror.NumberOnlyParam))
 			return
 		}
 
-		req := showuserbyid.InportRequest{
-			ID: id,
+		var req activationuser.InportRequest
+		if err := c.Bind(&req); err != nil {
+			newErr := apperror.FailUnmarshalResponseBodyError
+			log.Error(ctx, err.Error())
+			c.JSON(http.StatusBadRequest, NewErrorResponse(newErr))
+			return
 		}
 
+		req.ID = id
 		log.Info(ctx, util.MustJSON(req))
 
 		res, err := inputPort.Execute(ctx, req)
 		if err != nil {
 			log.Error(ctx, err.Error())
-			c.JSON(http.StatusOK, NewErrorResponse(err))
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err))
 			return
 		}
 

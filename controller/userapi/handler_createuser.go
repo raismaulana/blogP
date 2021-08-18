@@ -1,38 +1,29 @@
-package restapi
+package userapi
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/updateuser"
+	"github.com/raismaulana/blogP/usecase/createuser"
 )
 
-// updateUserHandler ...
-func (r *Controller) updateUserHandler(inputPort updateuser.Inport) gin.HandlerFunc {
+// createuserHandler ...
+func (r *Controller) CreateUserHandler(inputPort createuser.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
 		ctx := log.Context(c.Request.Context())
 
-		id, err := strconv.ParseInt(c.Param("id_user"), 10, 64)
-		if err != nil {
-			log.Error(ctx, err.Error())
-			c.JSON(http.StatusNotFound, NewErrorResponse(apperror.NumberOnlyParam))
-			return
-		}
-
-		var req updateuser.InportRequest
-		if err = c.BindJSON(&req); err != nil {
+		var req createuser.InportRequest
+		if err := c.BindJSON(&req); err != nil {
 			newErr := apperror.FailUnmarshalResponseBodyError
 			log.Error(ctx, err.Error())
 			c.JSON(http.StatusBadRequest, NewErrorResponse(newErr))
 			return
 		}
-		req.ID = id
 
 		log.Info(ctx, util.MustJSON(req))
 

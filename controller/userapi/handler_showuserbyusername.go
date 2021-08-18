@@ -1,4 +1,4 @@
-package restapi
+package userapi
 
 import (
 	"net/http"
@@ -6,17 +6,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/showallusers"
+	"github.com/raismaulana/blogP/usecase/showuserbyusername"
 )
 
-// showAllUsersHandler ...
-func (r *Controller) showAllUsersHandler(inputPort showallusers.Inport) gin.HandlerFunc {
+// showUserByUsernameHandler ...
+func (r *Controller) showUserByUsernameHandler(inputPort showuserbyusername.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
 		ctx := log.Context(c.Request.Context())
 
-		var req showallusers.InportRequest
+		req := showuserbyusername.InportRequest{
+			Username: c.Param("username"),
+		}
 
 		log.Info(ctx, util.MustJSON(req))
 

@@ -1,4 +1,4 @@
-package restapi
+package userapi
 
 import (
 	"net/http"

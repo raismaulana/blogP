@@ -1,4 +1,4 @@
-package restapi
+package userapi
 
 import (
 	"net/http"
@@ -8,11 +8,11 @@ import (
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/activationuser"
+	"github.com/raismaulana/blogP/usecase/updateuser"
 )
 
-// activationUserHandler ...
-func (r *Controller) activationUserHandler(inputPort activationuser.Inport) gin.HandlerFunc {
+// updateUserHandler ...
+func (r *Controller) updateUserHandler(inputPort updateuser.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -25,21 +25,21 @@ func (r *Controller) activationUserHandler(inputPort activationuser.Inport) gin.
 			return
 		}
 
-		var req activationuser.InportRequest
-		if err := c.Bind(&req); err != nil {
+		var req updateuser.InportRequest
+		if err = c.BindJSON(&req); err != nil {
 			newErr := apperror.FailUnmarshalResponseBodyError
 			log.Error(ctx, err.Error())
 			c.JSON(http.StatusBadRequest, NewErrorResponse(newErr))
 			return
 		}
-
 		req.ID = id
+
 		log.Info(ctx, util.MustJSON(req))
 
 		res, err := inputPort.Execute(ctx, req)
 		if err != nil {
 			log.Error(ctx, err.Error())
-			c.JSON(http.StatusBadRequest, NewErrorResponse(err))
+			c.JSON(http.StatusOK, NewErrorResponse(err))
 			return
 		}
 

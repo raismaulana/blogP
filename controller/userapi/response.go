@@ -1,4 +1,4 @@
-package restapi
+package userapi
 
 import (
 	"github.com/raismaulana/blogP/application/apperror"

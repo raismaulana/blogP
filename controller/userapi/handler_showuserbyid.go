@@ -1,4 +1,4 @@
-package restapi
+package userapi
 
 import (
 	"net/http"
@@ -8,11 +8,11 @@ import (
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/deleteuser"
+	"github.com/raismaulana/blogP/usecase/showuserbyid"
 )
 
-// deleteUserHandler ...
-func (r *Controller) deleteUserHandler(inputPort deleteuser.Inport) gin.HandlerFunc {
+// showUserByIDHandler ...
+func (r *Controller) showUserByIDHandler(inputPort showuserbyid.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -25,8 +25,9 @@ func (r *Controller) deleteUserHandler(inputPort deleteuser.Inport) gin.HandlerF
 			return
 		}
 
-		var req deleteuser.InportRequest
-		req.ID = id
+		req := showuserbyid.InportRequest{
+			ID: id,
+		}
 
 		log.Info(ctx, util.MustJSON(req))
 

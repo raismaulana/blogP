@@ -1,4 +1,4 @@
-package restapi
+package userapi
 
 import (
 	"net/http"
@@ -8,11 +8,11 @@ import (
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/resetactivationuser"
+	"github.com/raismaulana/blogP/usecase/deleteuser"
 )
 
-// resetActivationUserHandler ...
-func (r *Controller) resetActivationUserHandler(inputPort resetactivationuser.Inport) gin.HandlerFunc {
+// deleteUserHandler ...
+func (r *Controller) deleteUserHandler(inputPort deleteuser.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -25,9 +25,8 @@ func (r *Controller) resetActivationUserHandler(inputPort resetactivationuser.In
 			return
 		}
 
-		req := resetactivationuser.InportRequest{
-			ID: id,
-		}
+		var req deleteuser.InportRequest
+		req.ID = id
 
 		log.Info(ctx, util.MustJSON(req))
 
