@@ -24,6 +24,6 @@ func (r *RedisGateway) RDBSet(ctx context.Context, RDBkey string, value interfac
 	return r.RDB.Set(ctx, RDBkey, value, expiration).Err()
 }
 
-func (r *RedisGateway) RDBGet(ctx context.Context, RDBkey string, value interface{}, expiration time.Duration) (string, error) {
-	return r.RDB.Set(ctx, RDBkey, value, expiration).Result()
+func (r *RedisGateway) RDBGet(ctx context.Context, RDBkey string) (string, error) {
+	return r.RDB.Get(ctx, RDBkey).Result()
 }
