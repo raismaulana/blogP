@@ -39,7 +39,7 @@ func (r *activationUserInteractor) Execute(ctx context.Context, req InportReques
 		}
 
 		key := userObj.RDBKeyActivationUser()
-		RDBActivationCode, err := r.outport.RDBGet(ctx, key)
+		RDBActivationCode, _ := r.outport.RDBGet(ctx, key)
 
 		if RDBActivationCode != req.ActivationCode {
 			return apperror.ActivationCodeIsIncorrectOrExpired

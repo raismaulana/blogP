@@ -13,9 +13,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type dbContext string
+
 var (
-	contextDBValue = "DB"
-	db             = *&gorm.DB{
+	contextDBValue dbContext = "DB"
+	db                       = gorm.DB{
 		Config:       &gorm.Config{},
 		Error:        nil,
 		RowsAffected: 0,
@@ -26,7 +28,7 @@ var (
 			ID:       1,
 			Username: "user1",
 			Name:     "user1",
-			Email:    "user1@gmail.com",
+			Email:    "user1@example.com",
 			Password: "user1",
 			City:     "jakarta",
 			Country:  "indonesia",
@@ -112,6 +114,12 @@ func (r *mockOutportNormal) GetDatabase(ctx context.Context) (context.Context, e
 func (r *mockOutportNormal) SaveUser(ctx context.Context, obj *entity.User) error {
 	log.Info(ctx, "called")
 
+	for _, v := range users {
+		if v.ID == obj.ID {
+			v.ActivatedAt = null.NewTime(time.Now(), true)
+		}
+	}
+
 	return nil
 }
 
@@ -145,7 +153,7 @@ func TestCaseNormal(t *testing.T) {
 
 	res, err := NewUsecase(&mockOutport).Execute(ctx, InportRequest{
 		ID:             1,
-		Email:          "user1@gmail.com",
+		Email:          "user1@example.com",
 		ActivationCode: "thisisactivationcode",
 	})
 
