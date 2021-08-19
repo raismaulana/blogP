@@ -14,11 +14,18 @@ type JWTToken struct {
 	env *envconfig.EnvConfig
 }
 
-type customClaims struct {
-	authorized bool
-	email      string
-	role       string
+type CustomClaims struct {
+	Activated bool
+	Email     string
+	Role      string
 	jwt.StandardClaims
+}
+
+type GenerateTokenRequest struct {
+	ID        string
+	Email     string
+	Activated bool
+	Role      string
 }
 
 func NewJWTToken(env *envconfig.EnvConfig) (*JWTToken, error) {
@@ -32,19 +39,19 @@ func NewJWTToken(env *envconfig.EnvConfig) (*JWTToken, error) {
 
 }
 
-func (r *JWTToken) GenerateToken(id_user string, email string, role string) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &customClaims{
-		authorized: true,
-		email:      email,
-		role:       role,
+func (r *JWTToken) GenerateToken(req GenerateTokenRequest) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{
+		Activated: req.Activated,
+		Email:     req.Email,
+		Role:      req.Role,
 		StandardClaims: jwt.StandardClaims{
 			Audience:  r.env.AppBaseURL,
-			ExpiresAt: time.Now().Add(time.Hour * 168).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
 			Id:        uuid.NewString(),
 			IssuedAt:  time.Now().Unix(),
 			Issuer:    r.env.AppBaseURL,
 			NotBefore: time.Now().Unix(),
-			Subject:   id_user,
+			Subject:   req.ID,
 		},
 	})
 
@@ -57,11 +64,7 @@ func (r *JWTToken) GenerateToken(id_user string, email string, role string) (str
 }
 
 func (r *JWTToken) VerifyToken(encodedToken string) (*jwt.Token, error) {
-	token, err := jwt.Parse(encodedToken, func(t *jwt.Token) (interface{}, error) {
-		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
-
-		}
+	token, err := jwt.ParseWithClaims(encodedToken, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(r.env.SecretKey), nil
 	})
 	if err != nil {

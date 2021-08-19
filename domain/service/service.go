@@ -1,6 +1,10 @@
 package service
 
-import "context"
+import (
+	"context"
+
+	"github.com/raismaulana/blogP/domain/entity"
+)
 
 type HashPasswordService interface {
 	HashPassword(ctx context.Context, plainPassword string) (string, error)
@@ -46,7 +50,7 @@ type BuildMailActivationAccountServiceResponse struct {
 }
 
 type GenerateJWTTokenService interface {
-	GenerateJWTToken(ctx context.Context, req GenerateJWTTokenServiceRequest) (string, error)
+	GenerateJWTToken(ctx context.Context, userObj entity.User) (string, error)
 }
 
 type GenerateJWTTokenServiceRequest struct {

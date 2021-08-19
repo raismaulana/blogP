@@ -3,8 +3,10 @@ package shared
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/raismaulana/blogP/domain/entity"
 	"github.com/raismaulana/blogP/domain/service"
 	"github.com/raismaulana/blogP/infrastructure/auth"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
@@ -97,10 +99,15 @@ func (r *SharedGateway) VerifyPassword(ctx context.Context, req service.VerifyPa
 	return nil
 }
 
-func (r *SharedGateway) GenerateJWTToken(ctx context.Context, req service.GenerateJWTTokenServiceRequest) (string, error) {
+func (r *SharedGateway) GenerateJWTToken(ctx context.Context, userObj entity.User) (string, error) {
 	log.Info(ctx, "called")
 
-	token, err := r.JWTToken.GenerateToken(req.ID, req.Email, req.Role)
+	token, err := r.JWTToken.GenerateToken(auth.GenerateTokenRequest{
+		ID:        strconv.FormatInt(userObj.ID, 10),
+		Email:     userObj.Email,
+		Activated: userObj.ActivatedAt.Valid,
+		Role:      "",
+	})
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return "", err

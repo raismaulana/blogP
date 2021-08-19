@@ -37,11 +37,11 @@ func (r *Controller) RegisterRouter() {
 	r.Router.DELETE("/users/:id_user", r.authorized(), r.deleteUserHandler(r.DeleteUserInport))
 	r.Router.GET("/users", r.authorized(), r.showAllUsersHandler(r.ShowAllUsersInport))
 	r.Router.GET("/users/:id_user", r.authorized(), r.showUserByIDHandler(r.ShowUserByIDInport))
-	r.Router.GET("/users/:id_user/activation", r.authorized(), r.activationUserHandler(r.ActivationUserInport))
+	r.Router.GET("/users/:id_user/activation", r.activationUserHandler(r.ActivationUserInport))
 	r.Router.GET("/users/email/:email", r.authorized(), r.showUserByEmailHandler(r.ShowUserByEmailInport))
 	r.Router.GET("/users/username/:username", r.authorized(), r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
 	r.Router.POST("/users", r.authorized(), r.CreateUserHandler(r.CreateUserInport))
 	r.Router.PUT("/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
 	r.Router.GET("/users/:id_user/re-activation", r.authorized(), r.resetActivationUserHandler(r.ResetActivationUserInport))
-	r.Router.POST("/users/auth", r.authorized(), r.loginUserHandler(r.LoginUserInport))
+	r.Router.POST("/users/auth", r.loginUserHandler(r.LoginUserInport))
 }

@@ -2,7 +2,6 @@ package loginuser
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/domain/repository"
@@ -41,11 +40,7 @@ func (r *loginUserInteractor) Execute(ctx context.Context, req InportRequest) (*
 			return apperror.InvalidCredential
 		}
 
-		token, err := r.outport.GenerateJWTToken(ctx, service.GenerateJWTTokenServiceRequest{
-			ID:    strconv.FormatInt(userObj.ID, 10),
-			Email: userObj.Email,
-			Role:  "",
-		})
+		token, err := r.outport.GenerateJWTToken(ctx, *userObj)
 		if err != nil {
 			return apperror.FailedGenerateAuthToken
 		}
