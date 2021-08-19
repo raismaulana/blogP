@@ -32,7 +32,7 @@ func (r *resetActivationUserInteractor) Execute(ctx context.Context, req InportR
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
 		userObj, err := r.outport.FindUserByID(ctx, req.ID, true)
 		if err != nil {
-			return apperror.ObjectNotFound.Var(userObj.ID)
+			return apperror.ObjectNotFound.Var(userObj)
 		}
 		if userObj.ActivatedAt.Valid {
 			return apperror.UserIsAlreadyActivated
