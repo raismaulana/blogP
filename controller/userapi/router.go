@@ -2,10 +2,12 @@ package userapi
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/raismaulana/blogP/infrastructure/auth"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
 	"github.com/raismaulana/blogP/usecase/activationuser"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
+	"github.com/raismaulana/blogP/usecase/loginuser"
 	"github.com/raismaulana/blogP/usecase/resetactivationuser"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
@@ -15,6 +17,7 @@ import (
 )
 
 type Controller struct {
+	JWTToken                  *auth.JWTToken
 	Env                       *envconfig.EnvConfig
 	Router                    gin.IRouter
 	CreateUserInport          createuser.Inport
@@ -26,6 +29,7 @@ type Controller struct {
 	DeleteUserInport          deleteuser.Inport
 	ActivationUserInport      activationuser.Inport
 	ResetActivationUserInport resetactivationuser.Inport
+	LoginUserInport           loginuser.Inport
 }
 
 // RegisterRouter registering all the router
@@ -39,4 +43,5 @@ func (r *Controller) RegisterRouter() {
 	r.Router.POST("/users", r.authorized(), r.CreateUserHandler(r.CreateUserInport))
 	r.Router.PUT("/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
 	r.Router.GET("/users/:id_user/re-activation", r.authorized(), r.resetActivationUserHandler(r.ResetActivationUserInport))
+	r.Router.POST("/users/auth", r.authorized(), r.loginUserHandler(r.LoginUserInport))
 }

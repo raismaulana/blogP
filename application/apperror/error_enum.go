@@ -27,4 +27,6 @@ const (
 	InvalidActivationCode              ErrorType = "ER400 invalid activation code"                 //
 	InvalidEmail                       ErrorType = "ER400 invalid email"                           //
 	ActivationCodeIsIncorrectOrExpired ErrorType = "ER400 activation code is incorrect or expired" //
+	InvalidCredential                  ErrorType = "ER1000 invalid credential"                     //
+	FailedGenerateAuthToken            ErrorType = "ER1000 failed generate auth token"             //
 )

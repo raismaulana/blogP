@@ -7,6 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.7.3
 	github.com/go-playground/validator/v10 v10.9.0 // indirect
 	github.com/go-redis/redis/v8 v8.11.3
+	github.com/golang-jwt/jwt/v4 v4.0.0
 	github.com/google/uuid v1.3.0
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/spf13/viper v1.8.1

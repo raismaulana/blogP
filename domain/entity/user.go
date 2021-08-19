@@ -70,9 +70,7 @@ func NewUser(req UserRequest) (*User, error) {
 		return nil, apperror.BirthdayMustNotEmpty
 	}
 
-	var obj User
-
-	obj = User{
+	obj := User{
 		Username:    req.Username,
 		Name:        req.Name,
 		Email:       req.Email,

@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/raismaulana/blogP/domain/service"
+	"github.com/raismaulana/blogP/infrastructure/auth"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"golang.org/x/crypto/bcrypt"
@@ -13,12 +14,14 @@ import (
 )
 
 type SharedGateway struct {
-	Env *envconfig.EnvConfig
+	Env      *envconfig.EnvConfig
+	JWTToken *auth.JWTToken
 }
 
-func NewSharedGateway(env *envconfig.EnvConfig) *SharedGateway {
+func NewSharedGateway(env *envconfig.EnvConfig, jwtToken *auth.JWTToken) *SharedGateway {
 	return &SharedGateway{
-		Env: env,
+		Env:      env,
+		JWTToken: jwtToken,
 	}
 }
 
@@ -81,4 +84,26 @@ func (r *SharedGateway) BuildMailActivationAccount(ctx context.Context, req serv
 	)
 
 	return &mail
+}
+
+func (r *SharedGateway) VerifyPassword(ctx context.Context, req service.VerifyPasswordServiceRequest) error {
+	log.Info(ctx, "called")
+
+	err := bcrypt.CompareHashAndPassword([]byte(req.HashedPassword), []byte(req.PlainPassword))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *SharedGateway) GenerateJWTToken(ctx context.Context, req service.GenerateJWTTokenServiceRequest) (string, error) {
+	log.Info(ctx, "called")
+
+	token, err := r.JWTToken.GenerateToken(req.ID, req.Email, req.Role)
+	if err != nil {
+		log.Error(ctx, err.Error())
+		return "", err
+	}
+	return token, nil
 }

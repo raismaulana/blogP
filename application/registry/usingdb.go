@@ -9,12 +9,14 @@ import (
 	"github.com/raismaulana/blogP/application"
 	"github.com/raismaulana/blogP/controller/userapi"
 	"github.com/raismaulana/blogP/gateway/master"
+	"github.com/raismaulana/blogP/infrastructure/auth"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/server"
 	"github.com/raismaulana/blogP/usecase/activationuser"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
+	"github.com/raismaulana/blogP/usecase/loginuser"
 	"github.com/raismaulana/blogP/usecase/resetactivationuser"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
@@ -40,12 +42,12 @@ func NewUsingdb() func() application.RegistryContract {
 			log.Error(ctx, "Config Problem %v", err.Error())
 			os.Exit(1)
 		}
-		// secretKey := viper.GetString("secretkey")
-		// userToken, err := token.NewJWTToken(secretKey)
-		// if err != nil {
-		// 	log.Error(context.Background(), "Secret Key Problem %v", err.Error())
-		// 	os.Exit(1)
-		// }
+
+		jwtToken, err := auth.NewJWTToken(env)
+		if err != nil {
+			log.Error(context.Background(), "Secret Key Problem %v", err.Error())
+			os.Exit(1)
+		}
 
 		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
 			env.DBHost,
@@ -61,8 +63,8 @@ func NewUsingdb() func() application.RegistryContract {
 
 		rdb := redis.NewClient(&redis.Options{
 			Addr:     env.RedisHost + ":" + env.RedisPort,
-			Password: env.RedisPassword, // no password set
-			DB:       env.RedisDB,       // use default DB
+			Password: env.RedisPassword,
+			DB:       env.RedisDB,
 		})
 		_, err = rdb.Ping(ctx).Result()
 		if err != nil {
@@ -76,7 +78,7 @@ func NewUsingdb() func() application.RegistryContract {
 			os.Exit(1)
 		}
 
-		datasource, err := master.NewMasterGateway(env, db, rdb)
+		datasource, err := master.NewMasterGateway(env, db, rdb, jwtToken)
 		if err != nil {
 			log.Error(ctx, "%v", err.Error())
 			os.Exit(1)
@@ -85,6 +87,7 @@ func NewUsingdb() func() application.RegistryContract {
 		return &usingdb{
 			GinHTTPHandler: httpHandler,
 			restapiController: userapi.Controller{
+				JWTToken:                  jwtToken,
 				Env:                       env,
 				Router:                    httpHandler.Router,
 				CreateUserInport:          createuser.NewUsecase(datasource),
@@ -96,6 +99,7 @@ func NewUsingdb() func() application.RegistryContract {
 				DeleteUserInport:          deleteuser.NewUsecase(datasource),
 				ActivationUserInport:      activationuser.NewUsecase(datasource),
 				ResetActivationUserInport: resetactivationuser.NewUsecase(datasource),
+				LoginUserInport:           loginuser.NewUsecase(datasource),
 			},
 			// TODO another controller will added here ... <<<<<<
 		}
