@@ -1,0 +1,479 @@
+openapi: 3.0.3
+info:
+  title: blogP API
+  description: RESTful API blogP
+  version: 0.1.0
+  contact:
+    name: Rais Maulana
+    email: lufriraismaulana@gmail.com
+    url: https://github.com/raismaulana
+  license:
+    name: MIT License
+    url: https://raw.githubusercontent.com/raismaulana/blogP/main/LICENSE
+externalDocs:
+  description: Github
+  url: https://github.com/raismaulana/blogP
+servers:
+  - url: http://localhost:{port}
+    description: local (development) server
+    variables:
+      port:
+        default: "8080"
+        description: edit port with your blogP server port
+
+paths:
+  /ping:
+    get:
+      summary: ping server.
+      description: Endpoint to check connection with server.
+      responses:
+        "200":
+          description: Ready
+          content:
+            text/plain:
+              schema:
+                type: string
+                default: Ready
+  /v1/users:
+    get:
+      tags:
+        - "v1"
+      summary: Returns a list of users.
+      description: Only user who has admin role can use this endpoint.
+      security:
+        - bearerAuth:
+            -
+      responses:
+        "200":
+          description: Return a JSON array of users if success true.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/usersArray"
+                  - $ref: "#/components/schemas/errorResponse"
+        "403":
+          $ref: "#/components/responses/unauthorized"
+    post:
+      tags:
+        - "v1"
+      summary: User registration.
+      description: Register (create) new users.
+      requestBody:
+        description: data user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 4
+                  maxLength: 25
+                username:
+                  type: string
+                  minLength: 6
+                  maxLength: 12
+                password:
+                  type: string
+                  format: password
+                  minLength: 6
+                  maxLength: 25
+                email:
+                  type: string
+                  format: email
+                  minLength: 5
+                  maxLength: 25
+                city:
+                  type: string
+                  minLength: 1
+                  maxLength: 25
+                country:
+                  type: string
+                  minLength: 1
+                  maxLength: 25
+                birthday:
+                  type: string
+                  format: date
+                  pattern: YYYY-MM-DD
+                web_profile:
+                  type: string
+                  default: ""
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+  /v1/users/{id}:
+    get:
+      tags:
+        - "v1"
+      summary: Returns a user by id.
+      description: Return null data if no user has the id.
+      security:
+        - bearerAuth:
+            -
+      parameters:
+        - $ref: "#/components/parameters/userID"
+      responses:
+        "200":
+          description: Return a JSON object of users if success true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/usersResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "403":
+          $ref: "#/components/responses/unauthorized"
+    delete:
+      tags:
+        - "v1"
+      summary: Delete user by id.
+      security:
+        - bearerAuth:
+            -
+      parameters:
+        - $ref: "#/components/parameters/userID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "403":
+          $ref: "#/components/responses/unauthorized"
+
+    put:
+      tags:
+        - "v1"
+      summary: Update user.
+      security:
+        - bearerAuth:
+            -
+      parameters:
+        - $ref: "#/components/parameters/userID"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 4
+                  maxLength: 25
+                city:
+                  type: string
+                  minLength: 1
+                  maxLength: 25
+                country:
+                  type: string
+                  minLength: 1
+                  maxLength: 25
+                birthday:
+                  type: string
+                  format: date
+                  pattern: YYYY-MM-DD
+                web_profile:
+                  type: string
+                  default: ""
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "403":
+          $ref: "#/components/responses/unauthorized"
+  /v1/users/{id}/activation:
+    get:
+      tags:
+        - "v1"
+      summary: User activation
+      parameters:
+        - $ref: "#/components/parameters/userID"
+        - in: query
+          name: email
+          required: true
+          schema:
+            type: string
+            minLength: 5
+            maxLength: 320
+        - in: query
+          name: activation_code
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+  /v1/users/{id}/re-activation:
+    get:
+      tags:
+        - "v1"
+      summary: Resend activation code to email.
+      security:
+        - bearerAuth:
+            -
+      parameters:
+        - $ref: "#/components/parameters/userID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "403":
+          $ref: "#/components/responses/unauthorized"
+  /v1/users/auth:
+    post:
+      tags:
+        - "v1"
+      summary: Login
+      description: Return token if login success
+      requestBody:
+        description: Login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 6
+                  maxLength: 12
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        default: true
+                      errorCode:
+                        type: string
+                        default: ""
+                      errorMessage:
+                        type: string
+                        default: ""
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+  /v1/users/email/{email}:
+    get:
+      tags:
+        - "v1"
+      summary: Returns a user by email.
+      description: Return null data if no user has the email.
+      security:
+        - bearerAuth:
+            -
+      parameters:
+        - $ref: "#/components/parameters/userEmail"
+      responses:
+        "200":
+          description: Return a JSON object of users if success true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/usersResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "403":
+          $ref: "#/components/responses/unauthorized"
+  /v1/users/username/{username}:
+    get:
+      tags:
+        - "v1"
+      summary: Returns a user by username.
+      description: Return null data if no user has the email.
+      security:
+        - bearerAuth:
+            -
+      parameters:
+        - $ref: "#/components/parameters/userUsername"
+      responses:
+        "200":
+          description: Return a JSON object of users if success true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/usersResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "403":
+          $ref: "#/components/responses/unauthorized"
+components:
+  parameters:
+    userID:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minLength: 1
+    userEmail:
+      in: path
+      name: email
+      required: true
+      schema:
+        type: string
+        minLength: 5
+        maxLength: 320
+    userUsername:
+      in: path
+      name: username
+      required: true
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 12
+  responses:
+    unauthorized:
+      description: Response when user doesn't allowed to use this endpoint, e.g. invalid token
+    badrequest:
+      description: Response when request params is not satisfied, e.g. validation error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/errorResponse"
+  securitySchemes:
+    bearerAuth:
+      description: "Authorization bearer token"
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+  schemas:
+    errorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+        errorCode:
+          type: string
+        errorMessage:
+          type: string
+        data:
+          type: object
+          nullable: true
+          default:
+    successResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          type: object
+    users:
+      type: object
+      properties:
+        id_user:
+          type: number
+          format: int64
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        birthday:
+          type: string
+          format: date
+          pattern: YYYY-MM-DD
+        web_profile:
+          type: string
+        activated:
+          type: boolean
+          default: false
+    usersResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          $ref: "#/components/schemas/users"
+    usersArray:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: "#/components/schemas/users"
