@@ -1,7 +1,7 @@
 # blogP
 ## Simple blog app RESTful API
 ### built with golang gin-gonic gogen postgresql redis
-[documentation/openapi3](https://petstore.swagger.io/?url=https://path/to/file.yaml#/v1/post_v1_users_auth)
+[documentation/openapi3](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/raismaulana/blogP/main/openapi.yaml)
 #
 ## How to install?
 ```
