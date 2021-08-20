@@ -29,7 +29,7 @@ import (
 
 type usingdb struct {
 	server.GinHTTPHandler
-	restapiController userapi.Controller
+	userapiController userapi.Controller
 	// TODO Another controller will added here ... <<<<<<
 }
 
@@ -86,7 +86,7 @@ func NewUsingdb() func() application.RegistryContract {
 
 		return &usingdb{
 			GinHTTPHandler: httpHandler,
-			restapiController: userapi.Controller{
+			userapiController: userapi.Controller{
 				JWTToken:                  jwtToken,
 				Env:                       env,
 				Router:                    httpHandler.Router,
@@ -108,6 +108,6 @@ func NewUsingdb() func() application.RegistryContract {
 }
 
 func (r *usingdb) SetupController() {
-	r.restapiController.RegisterRouter()
+	r.userapiController.RegisterRouter()
 	// TODO another router call will added here ... <<<<<<
 }
