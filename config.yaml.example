@@ -7,7 +7,7 @@ db_password: postgres
 
 # app
 app_name: blogP
-base_url: http://localhost
+base_url: http://localhost:8080/
 port: "8080"
 
 # auth
