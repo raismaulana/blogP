@@ -18,11 +18,6 @@ func NewGinHTTPHandler(address string) (GinHTTPHandler, error) {
 
 	router := gin.Default()
 
-	// PING API
-	router.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "Ready")
-	})
-
 	// CORS
 	router.Use(cors.New(cors.Config{
 		ExposeHeaders:   []string{"Data-Length"},
@@ -31,6 +26,11 @@ func NewGinHTTPHandler(address string) (GinHTTPHandler, error) {
 		AllowHeaders:    []string{"Content-Type", "Authorization"},
 		MaxAge:          12 * time.Hour,
 	}))
+
+	// PING API
+	router.GET("/ping", func(c *gin.Context) {
+		c.String(http.StatusOK, "Ready")
+	})
 
 	return GinHTTPHandler{
 		GracefullyShutdown: NewGracefullyShutdown(router, address),
