@@ -9,6 +9,7 @@ import (
 	"github.com/raismaulana/blogP/domain/repository"
 	"github.com/raismaulana/blogP/domain/service"
 	"github.com/raismaulana/blogP/infrastructure/log"
+	"gopkg.in/guregu/null.v4"
 )
 
 //go:generate mockery --name Outport -output mocks/
@@ -62,7 +63,7 @@ func (r *createUserInteractor) Execute(ctx context.Context, req InportRequest) (
 			City:       req.City,
 			Country:    req.Country,
 			Birthday:   req.Birthday,
-			WebProfile: req.WebProfile,
+			WebProfile: null.StringFromPtr(req.WebProfile),
 		})
 		if err != nil {
 			return err

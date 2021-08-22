@@ -95,11 +95,13 @@ paths:
                   maxLength: 25
                 birthday:
                   type: string
-                  format: date
-                  pattern: YYYY-MM-DD
+                  description: RFC3339 datetime
+                  format: date-time
+                  example: "2021-08-21T00:00:00Z"
                 web_profile:
                   type: string
-                  default: ""
+                  default:
+                  nullable: false
       responses:
         "200":
           description: OK

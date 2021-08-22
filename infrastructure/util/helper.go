@@ -1,6 +1,12 @@
 package util
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	ut "github.com/go-playground/universal-translator"
+)
+
+var Trans ut.Translator
 
 // MustJSON is converter from interface{} to string
 // Warning! this function will always assume the convertion is success

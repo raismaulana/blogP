@@ -10,6 +10,7 @@ const (
 	ObjectNotFound                     ErrorType = "ER1001 Object %s is not found"           // used by injected repo in interactor
 	UnrecognizedEnum                   ErrorType = "ER1002 %s is not recognized %s enum"     // used by enum
 	DatabaseNotFoundInContextError     ErrorType = "ER1003 Database is not found in context" // used by repoimpl
+	ValidationError                    ErrorType = "ER400 %s"                                // used by repoimpl
 	UsernameMustNotEmpty               ErrorType = "ER400 username must not empty"           // used by entity/user
 	NameMustNotEmpty                   ErrorType = "ER400 name must not empty"               // used by entity/user
 	EmailMustNotEmpty                  ErrorType = "ER400 email must not empty"              // used by entity/user
