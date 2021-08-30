@@ -16,6 +16,7 @@ type EnvConfig struct {
 	DBPassword    string `mapstructure:"db_password"`    //
 	AppName       string `mapstructure:"app_name"`       //
 	AppBaseURL    string `mapstructure:"base_url"`       //
+	AppBaseURLV1  string `mapstructure:"base_url_v1"`    //
 	AppPort       string `mapstructure:"port"`           //
 	SecretKey     string `mapstructure:"secretkey"`      //
 	SMTPHost      string `mapstructure:"smtp_host"`      //
