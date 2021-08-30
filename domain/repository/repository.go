@@ -38,3 +38,7 @@ type RDBSetRepo interface {
 type RDBGetRepo interface {
 	RDBGet(ctx context.Context, RDBkey string) (string, error)
 }
+
+type FetchTagsRepo interface {
+	FetchTags(ctx context.Context, scope bool) ([]*entity.Tag, error)
+}

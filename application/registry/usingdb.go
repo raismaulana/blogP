@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/raismaulana/blogP/application"
+	"github.com/raismaulana/blogP/controller/tagapi"
 	"github.com/raismaulana/blogP/controller/userapi"
 	"github.com/raismaulana/blogP/gateway/master"
 	"github.com/raismaulana/blogP/infrastructure/auth"
@@ -18,6 +19,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/deleteuser"
 	"github.com/raismaulana/blogP/usecase/loginuser"
 	"github.com/raismaulana/blogP/usecase/resetactivationuser"
+	"github.com/raismaulana/blogP/usecase/showalltags"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
 	"github.com/raismaulana/blogP/usecase/showuserbyid"
@@ -30,6 +32,7 @@ import (
 type usingdb struct {
 	server.GinHTTPHandler
 	userapiController userapi.Controller
+	tagapiController  tagapi.Controller
 	// TODO Another controller will added here ... <<<<<<
 }
 
@@ -101,6 +104,12 @@ func NewUsingdb() func() application.RegistryContract {
 				ResetActivationUserInport: resetactivationuser.NewUsecase(datasource),
 				LoginUserInport:           loginuser.NewUsecase(datasource),
 			},
+			tagapiController: tagapi.Controller{
+				JWTToken:          jwtToken,
+				Env:               env,
+				Router:            httpHandler.Router,
+				ShowAllTagsInport: showalltags.NewUsecase(datasource),
+			},
 			// TODO another controller will added here ... <<<<<<
 		}
 
@@ -109,5 +118,6 @@ func NewUsingdb() func() application.RegistryContract {
 
 func (r *usingdb) SetupController() {
 	r.userapiController.RegisterRouter()
+	r.tagapiController.RegisterRouter()
 	// TODO another router call will added here ... <<<<<<
 }
