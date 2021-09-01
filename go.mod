@@ -27,4 +27,5 @@ require (
 	gorm.io/datatypes v1.0.1 // indirect
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/gorm v1.21.14
+	gorm.io/plugin/soft_delete v1.0.2 // indirect
 )

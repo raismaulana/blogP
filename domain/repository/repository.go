@@ -12,19 +12,19 @@ type SaveUserRepo interface {
 }
 
 type FindUserByUsernameRepo interface {
-	FindUserByUsername(ctx context.Context, username string, scope bool) (*entity.User, error)
+	FindUserByUsername(ctx context.Context, username string) (*entity.User, error)
 }
 
 type FindUserByEmailRepo interface {
-	FindUserByEmail(ctx context.Context, email string, scope bool) (*entity.User, error)
+	FindUserByEmail(ctx context.Context, email string) (*entity.User, error)
 }
 
 type FindUserByIDRepo interface {
-	FindUserByID(ctx context.Context, ID int64, scope bool) (*entity.User, error)
+	FindUserByID(ctx context.Context, ID int64) (*entity.User, error)
 }
 
 type FetchUsersRepo interface {
-	FetchUsers(ctx context.Context, scope bool) ([]*entity.User, error)
+	FetchUsers(ctx context.Context) ([]*entity.User, error)
 }
 
 type DeleteUserRepo interface {
@@ -40,5 +40,41 @@ type RDBGetRepo interface {
 }
 
 type FetchTagsRepo interface {
-	FetchTags(ctx context.Context, scope bool) ([]*entity.Tag, error)
+	FetchTags(ctx context.Context) ([]*entity.Tag, error)
+}
+
+type SaveTagRepo interface {
+	SaveTag(ctx context.Context, obj *entity.Tag) error
+}
+
+type FindTagByTagRepo interface {
+	FindTagByTag(ctx context.Context, tag string) (*entity.Tag, error)
+}
+
+type FindTagByIDRepo interface {
+	FindTagByID(ctx context.Context, id int64) (*entity.Tag, error)
+}
+
+type DeleteTagRepo interface {
+	DeleteTag(ctx context.Context, obj *entity.Tag) error
+}
+
+type SaveCategoryRepo interface {
+	SaveCategory(ctx context.Context, obj *entity.Category) error
+}
+
+type FetchCategoriesRepo interface {
+	FetchCategories(ctx context.Context) ([]*entity.Category, error)
+}
+
+type FindCategoryByCategoryRepo interface {
+	FindCategoryByCategory(ctx context.Context, category string) (*entity.Category, error)
+}
+
+type FindCategoryByIDRepo interface {
+	FindCategoryByID(ctx context.Context, id int64) (*entity.Category, error)
+}
+
+type DeleteCategoryRepo interface {
+	DeleteCategory(ctx context.Context, obj *entity.Category) error
 }

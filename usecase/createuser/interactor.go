@@ -32,12 +32,12 @@ func (r *createUserInteractor) Execute(ctx context.Context, req InportRequest) (
 	mail := &service.BuildMailActivationAccountServiceResponse{}
 
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		existingUser, err := r.outport.FindUserByUsername(ctx, req.Username, false)
+		existingUser, err := r.outport.FindUserByUsername(ctx, req.Username)
 		if existingUser != nil || err == nil {
 			return apperror.UsernameAlreadyUsed
 		}
 
-		existingUser, err = r.outport.FindUserByEmail(ctx, req.Email, false)
+		existingUser, err = r.outport.FindUserByEmail(ctx, req.Email)
 		if existingUser != nil || err == nil {
 			return apperror.EmailAlreadyUsed
 		}

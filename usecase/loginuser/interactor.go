@@ -27,7 +27,7 @@ func (r *loginUserInteractor) Execute(ctx context.Context, req InportRequest) (*
 	res := &InportResponse{}
 
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		userObj, err := r.outport.FindUserByUsername(ctx, req.Username, true)
+		userObj, err := r.outport.FindUserByUsername(ctx, req.Username)
 		if err != nil {
 			return apperror.InvalidCredential
 		}

@@ -28,7 +28,7 @@ func (r *activationUserInteractor) Execute(ctx context.Context, req InportReques
 	res := &InportResponse{}
 
 	err := repository.WithTransaction(ctx, r.outport, func(ctx context.Context) error {
-		userObj, err := r.outport.FindUserByID(ctx, req.ID, true)
+		userObj, err := r.outport.FindUserByID(ctx, req.ID)
 		if err != nil {
 			return apperror.ObjectNotFound.Var(userObj)
 		}

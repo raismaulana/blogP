@@ -26,7 +26,7 @@ func (r *showAllTagsInteractor) Execute(ctx context.Context, req InportRequest) 
 	res := &InportResponse{}
 
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		tagObjs, err := r.outport.FetchTags(ctx, true)
+		tagObjs, err := r.outport.FetchTags(ctx)
 
 		if err != nil {
 			return apperror.ObjectNotFound.Var(tagObjs)

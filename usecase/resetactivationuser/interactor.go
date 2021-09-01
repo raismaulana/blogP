@@ -30,7 +30,7 @@ func (r *resetActivationUserInteractor) Execute(ctx context.Context, req InportR
 	mail := &service.BuildMailActivationAccountServiceResponse{}
 
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		userObj, err := r.outport.FindUserByID(ctx, req.ID, true)
+		userObj, err := r.outport.FindUserByID(ctx, req.ID)
 		if err != nil {
 			return apperror.ObjectNotFound.Var(userObj)
 		}

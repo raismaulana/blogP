@@ -25,7 +25,7 @@ func (r *RDBMSGateway) SaveUser(ctx context.Context, obj *entity.User) error {
 	return nil
 }
 
-func (r *RDBMSGateway) FindUserByUsername(ctx context.Context, username string, scope bool) (*entity.User, error) {
+func (r *RDBMSGateway) FindUserByUsername(ctx context.Context, username string) (*entity.User, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -34,11 +34,7 @@ func (r *RDBMSGateway) FindUserByUsername(ctx context.Context, username string, 
 	}
 
 	var user entity.User
-	if scope {
-		err = db.Where("username = ?", username).First(&user).Error
-	} else {
-		err = db.Unscoped().Where("username = ?", username).First(&user).Error
-	}
+	err = db.Where("username = ?", username).First(&user).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
@@ -47,7 +43,7 @@ func (r *RDBMSGateway) FindUserByUsername(ctx context.Context, username string, 
 	return &user, nil
 }
 
-func (r *RDBMSGateway) FindUserByEmail(ctx context.Context, email string, scope bool) (*entity.User, error) {
+func (r *RDBMSGateway) FindUserByEmail(ctx context.Context, email string) (*entity.User, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -56,12 +52,7 @@ func (r *RDBMSGateway) FindUserByEmail(ctx context.Context, email string, scope 
 	}
 
 	var user entity.User
-	if scope {
-		err = db.Where("email = ?", email).First(&user).Error
-	} else {
-		err = db.Unscoped().Where("email = ?", email).First(&user).Error
-
-	}
+	err = db.Where("email = ?", email).First(&user).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
@@ -70,7 +61,7 @@ func (r *RDBMSGateway) FindUserByEmail(ctx context.Context, email string, scope 
 	return &user, nil
 }
 
-func (r *RDBMSGateway) FindUserByID(ctx context.Context, ID int64, scope bool) (*entity.User, error) {
+func (r *RDBMSGateway) FindUserByID(ctx context.Context, ID int64) (*entity.User, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -79,11 +70,7 @@ func (r *RDBMSGateway) FindUserByID(ctx context.Context, ID int64, scope bool) (
 	}
 
 	var user entity.User
-	if scope {
-		err = db.Where("id_user = ?", ID).First(&user).Error
-	} else {
-		err = db.Unscoped().Where("id_user = ?", ID).First(&user).Error
-	}
+	err = db.Where("id_user = ?", ID).First(&user).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
@@ -92,7 +79,7 @@ func (r *RDBMSGateway) FindUserByID(ctx context.Context, ID int64, scope bool) (
 	return &user, nil
 }
 
-func (r *RDBMSGateway) FetchUsers(ctx context.Context, scope bool) ([]*entity.User, error) {
+func (r *RDBMSGateway) FetchUsers(ctx context.Context) ([]*entity.User, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -101,11 +88,7 @@ func (r *RDBMSGateway) FetchUsers(ctx context.Context, scope bool) ([]*entity.Us
 	}
 
 	var objs []*entity.User
-	if scope {
-		err = db.Find(&objs).Error
-	} else {
-		err = db.Unscoped().Find(&objs).Error
-	}
+	err = db.Find(&objs).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
@@ -121,7 +104,7 @@ func (r *RDBMSGateway) DeleteUser(ctx context.Context, obj *entity.User) error {
 		return err
 	}
 
-	err = db.Unscoped().Delete(&obj).Error // delete
+	err = db.Delete(&obj).Error // delete
 	if err != nil {
 		log.Error(ctx, err.Error())
 

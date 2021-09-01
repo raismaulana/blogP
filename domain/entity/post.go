@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"gorm.io/datatypes"
-	"gorm.io/gorm"
 )
 
 type Post struct {
@@ -13,11 +12,10 @@ type Post struct {
 	Description string         `gorm:"type:varchar(255) not null"`                //
 	Content     datatypes.JSON `gorm:"not null"`                                  //
 	Cover       string         `gorm:"type:text not null"`                        //
-	Slug        string         `gorm:"type:varchar(255) not null"`                //
+	Slug        string         `gorm:"type:varchar(255) not null unique"`         //
 	Categories  []Category     `gorm:"many2many:post_categories;"`                //
 	Tags        []Tag          `gorm:"many2many:post_tags;"`                      //
 	UserID      int64          `gorm:"not null"`                                  //
 	CreatedAt   time.Time      ``                                                 //
 	UpdatedAt   time.Time      ``                                                 //
-	DeletedAt   gorm.DeletedAt `gorm:"index"`                                     //
 }

@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/raismaulana/blogP/application"
+	"github.com/raismaulana/blogP/controller/categoryapi"
 	"github.com/raismaulana/blogP/controller/tagapi"
 	"github.com/raismaulana/blogP/controller/userapi"
 	"github.com/raismaulana/blogP/gateway/master"
@@ -15,15 +16,24 @@ import (
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/server"
 	"github.com/raismaulana/blogP/usecase/activationuser"
+	"github.com/raismaulana/blogP/usecase/createcategory"
+	"github.com/raismaulana/blogP/usecase/createtag"
 	"github.com/raismaulana/blogP/usecase/createuser"
+	"github.com/raismaulana/blogP/usecase/deletecategory"
+	"github.com/raismaulana/blogP/usecase/deletetag"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
 	"github.com/raismaulana/blogP/usecase/loginuser"
 	"github.com/raismaulana/blogP/usecase/resetactivationuser"
+	"github.com/raismaulana/blogP/usecase/showallcategories"
 	"github.com/raismaulana/blogP/usecase/showalltags"
 	"github.com/raismaulana/blogP/usecase/showallusers"
+	"github.com/raismaulana/blogP/usecase/showcategorybyid"
+	"github.com/raismaulana/blogP/usecase/showtagbyid"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
 	"github.com/raismaulana/blogP/usecase/showuserbyid"
 	"github.com/raismaulana/blogP/usecase/showuserbyusername"
+	"github.com/raismaulana/blogP/usecase/updatecategory"
+	"github.com/raismaulana/blogP/usecase/updatetag"
 	"github.com/raismaulana/blogP/usecase/updateuser"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -31,8 +41,9 @@ import (
 
 type usingdb struct {
 	server.GinHTTPHandler
-	userapiController userapi.Controller
-	tagapiController  tagapi.Controller
+	categoryapiController categoryapi.Controller
+	userapiController     userapi.Controller
+	tagapiController      tagapi.Controller
 	// TODO Another controller will added here ... <<<<<<
 }
 
@@ -89,6 +100,16 @@ func NewUsingdb() func() application.RegistryContract {
 
 		return &usingdb{
 			GinHTTPHandler: httpHandler,
+			categoryapiController: categoryapi.Controller{
+				JWTToken:                jwtToken,
+				Env:                     env,
+				Router:                  httpHandler.Router,
+				CreateCategoryInport:    createcategory.NewUsecase(datasource),
+				ShowAllCategoriesInport: showallcategories.NewUsecase(datasource),
+				ShowCategoryByIDInport:  showcategorybyid.NewUsecase(datasource),
+				DeleteCategoryInport:    deletecategory.NewUsecase(datasource),
+				UpdateCategoryInport:    updatecategory.NewUsecase(datasource),
+			},
 			userapiController: userapi.Controller{
 				JWTToken:                  jwtToken,
 				Env:                       env,
@@ -109,6 +130,10 @@ func NewUsingdb() func() application.RegistryContract {
 				Env:               env,
 				Router:            httpHandler.Router,
 				ShowAllTagsInport: showalltags.NewUsecase(datasource),
+				CreateTagInport:   createtag.NewUsecase(datasource),
+				ShowTagByIDInport: showtagbyid.NewUsecase(datasource),
+				UpdateTagInport:   updatetag.NewUsecase(datasource),
+				DeleteTagInport:   deletetag.NewUsecase(datasource),
 			},
 			// TODO another controller will added here ... <<<<<<
 		}
@@ -119,5 +144,6 @@ func NewUsingdb() func() application.RegistryContract {
 func (r *usingdb) SetupController() {
 	r.userapiController.RegisterRouter()
 	r.tagapiController.RegisterRouter()
+	r.categoryapiController.RegisterRouter()
 	// TODO another router call will added here ... <<<<<<
 }
