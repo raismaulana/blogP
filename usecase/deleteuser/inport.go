@@ -11,7 +11,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase DeleteUser
 type InportRequest struct {
-	ID int64 `json:"id_user"` //
+	ID int64 `json:"id_user" binding:"required,numeric"` //
 }
 
 // InportResponse is response payload after running the usecase DeleteUser

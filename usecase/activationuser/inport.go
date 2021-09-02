@@ -11,7 +11,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase ActivationUser
 type InportRequest struct {
-	ID             int64  `json:"id_user"`                                                   //
+	ID             int64  `json:"id_user" binding:"required,numeric"`                        //
 	Email          string `json:"email" form:"email" binding:"required"`                     //
 	ActivationCode string `json:"activation_code" form:"activation_code" binding:"required"` //
 }

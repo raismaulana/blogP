@@ -11,8 +11,8 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase LoginUser
 type InportRequest struct {
-	Username string `json:"username"` //
-	Password string `json:"password"`
+	Username string `json:"username" binding:"required"` //
+	Password string `json:"password" binding:"required"` //
 }
 
 // InportResponse is response payload after running the usecase LoginUser

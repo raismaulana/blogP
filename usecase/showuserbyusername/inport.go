@@ -14,7 +14,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase ShowUserByUsername
 type InportRequest struct {
-	Username string `json:"username"` //
+	Username string `uri:"username" binding:"required"` //
 }
 
 // InportResponse is response payload after running the usecase ShowUserByUsername

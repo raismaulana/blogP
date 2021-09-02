@@ -1,10 +1,12 @@
 package userapi
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
@@ -26,13 +28,22 @@ func (r *Controller) updateUserHandler(inputPort updateuser.Inport) gin.HandlerF
 		}
 
 		var req updateuser.InportRequest
+		req.ID = id
 		if err = c.BindJSON(&req); err != nil {
-			newErr := apperror.FailUnmarshalResponseBodyError
-			log.Error(ctx, err.Error())
-			c.JSON(http.StatusBadRequest, NewErrorResponse(newErr))
+			log.Error(ctx, "bind", err.Error())
+			errs, ok := err.(validator.ValidationErrors)
+			if !ok {
+				c.JSON(http.StatusBadRequest, NewErrorResponse(apperror.FailUnmarshalResponseBodyError))
+				return
+			}
+			var ez string
+			for _, e := range errs {
+				ez = ez + e.Translate(util.Trans) + "\n"
+			}
+
+			c.JSON(http.StatusBadRequest, NewErrorResponse(errors.New(ez)))
 			return
 		}
-		req.ID = id
 
 		log.Info(ctx, util.MustJSON(req))
 

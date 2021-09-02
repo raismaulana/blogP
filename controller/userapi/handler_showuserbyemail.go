@@ -1,9 +1,12 @@
 package userapi
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
@@ -16,8 +19,21 @@ func (r *Controller) showUserByEmailHandler(inputPort showuserbyemail.Inport) gi
 
 		ctx := log.Context(c.Request.Context())
 
-		req := showuserbyemail.InportRequest{
-			Email: c.Param("email"),
+		var req showuserbyemail.InportRequest
+		if err := c.BindUri(&req); err != nil {
+			log.Error(ctx, "bind", err.Error())
+			errs, ok := err.(validator.ValidationErrors)
+			if !ok {
+				c.JSON(http.StatusBadRequest, NewErrorResponse(apperror.FailUnmarshalResponseBodyError))
+				return
+			}
+			var ez string
+			for _, e := range errs {
+				ez = ez + e.Translate(util.Trans) + "\n"
+			}
+
+			c.JSON(http.StatusBadRequest, NewErrorResponse(errors.New(ez)))
+			return
 		}
 
 		log.Info(ctx, util.MustJSON(req))
