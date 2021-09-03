@@ -94,3 +94,7 @@ type FindCategoriesByIDsRepo interface {
 type FindTagsByIDsRepo interface {
 	FindTagsByIDs(ctx context.Context, ids []int64) ([]*entity.Tag, error)
 }
+
+type FetchPostsRepo interface {
+	FetchPosts(ctx context.Context) ([]*entity.Post, error)
+}

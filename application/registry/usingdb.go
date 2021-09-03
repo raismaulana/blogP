@@ -27,6 +27,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/loginuser"
 	"github.com/raismaulana/blogP/usecase/resetactivationuser"
 	"github.com/raismaulana/blogP/usecase/showallcategories"
+	"github.com/raismaulana/blogP/usecase/showallposts"
 	"github.com/raismaulana/blogP/usecase/showalltags"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showcategorybyid"
@@ -114,10 +115,11 @@ func NewUsingdb() func() application.RegistryContract {
 				UpdateCategoryInport:    updatecategory.NewUsecase(datasource),
 			},
 			postapiController: postapi.Controller{
-				JWTToken:         jwtToken,
-				Env:              env,
-				Router:           httpHandler.Router,
-				CreatePostInport: createpost.NewUsecase(datasource),
+				JWTToken:           jwtToken,
+				Env:                env,
+				Router:             httpHandler.Router,
+				CreatePostInport:   createpost.NewUsecase(datasource),
+				ShowAllPostsInport: showallposts.NewUsecase(datasource),
 			},
 			userapiController: userapi.Controller{
 				JWTToken:                  jwtToken,

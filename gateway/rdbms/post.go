@@ -17,7 +17,7 @@ func (r *RDBMSGateway) FetchPosts(ctx context.Context) ([]*entity.Post, error) {
 	}
 
 	var objs []*entity.Post
-	err = db.Find(&objs).Error
+	err = db.Preload("Categories").Preload("Tags").Find(&objs).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
