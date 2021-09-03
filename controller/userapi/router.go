@@ -35,13 +35,13 @@ type Controller struct {
 // RegisterRouter registering all the router
 func (r *Controller) RegisterRouter() {
 	r.Router.DELETE("/v1/users/:id_user", r.authorized(), r.deleteUserHandler(r.DeleteUserInport))
-	r.Router.GET("/v1/users", r.authorized(), r.showAllUsersHandler(r.ShowAllUsersInport))
-	r.Router.GET("/v1/users/:id_user", r.authorized(), r.showUserByIDHandler(r.ShowUserByIDInport))
+	r.Router.GET("/v1/users", r.showAllUsersHandler(r.ShowAllUsersInport))
+	r.Router.GET("/v1/users/:id_user", r.showUserByIDHandler(r.ShowUserByIDInport))
 	r.Router.GET("/v1/users/:id_user/activation", r.activationUserHandler(r.ActivationUserInport))
-	r.Router.GET("/v1/users/email/:email", r.authorized(), r.showUserByEmailHandler(r.ShowUserByEmailInport))
-	r.Router.GET("/v1/users/username/:username", r.authorized(), r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
+	r.Router.GET("/v1/users/email/:email", r.showUserByEmailHandler(r.ShowUserByEmailInport))
+	r.Router.GET("/v1/users/username/:username", r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
 	r.Router.POST("/v1/users", r.CreateUserHandler(r.CreateUserInport))
 	r.Router.PUT("/v1/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
-	r.Router.GET("/v1/users/:id_user/re-activation", r.authorized(), r.resetActivationUserHandler(r.ResetActivationUserInport))
+	r.Router.GET("/v1/users/:id_user/re-activation", r.authorized(), r.resetActivationUserHandler(r.ResetActivationUserInport)) // broken
 	r.Router.POST("/v1/users/auth", r.loginUserHandler(r.LoginUserInport))
 }
