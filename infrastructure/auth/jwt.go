@@ -17,12 +17,14 @@ type JWTToken struct {
 type CustomClaims struct {
 	Activated bool
 	Email     string
+	ID        int64
 	Role      string
 	jwt.StandardClaims
 }
 
 type GenerateTokenRequest struct {
-	ID        string
+	Subject   string
+	ID        int64
 	Email     string
 	Activated bool
 	Role      string
@@ -43,6 +45,7 @@ func (r *JWTToken) GenerateToken(req GenerateTokenRequest) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{
 		Activated: req.Activated,
 		Email:     req.Email,
+		ID:        req.ID,
 		Role:      req.Role,
 		StandardClaims: jwt.StandardClaims{
 			Audience:  r.env.AppBaseURL,
@@ -51,7 +54,7 @@ func (r *JWTToken) GenerateToken(req GenerateTokenRequest) (string, error) {
 			IssuedAt:  time.Now().Unix(),
 			Issuer:    r.env.AppBaseURL,
 			NotBefore: time.Now().Unix(),
-			Subject:   req.ID,
+			Subject:   req.Subject,
 		},
 	})
 

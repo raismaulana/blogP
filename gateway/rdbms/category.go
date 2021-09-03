@@ -48,14 +48,14 @@ func (r *RDBMSGateway) FindCategoryByCategory(ctx context.Context, category stri
 		return nil, err
 	}
 
-	var categoryObj entity.Category
-	err = db.Where("category = ?", category).First(&categoryObj).Error
+	var obj entity.Category
+	err = db.Where("category = ?", category).First(&obj).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
 	}
 
-	return &categoryObj, nil
+	return &obj, nil
 }
 
 func (r *RDBMSGateway) FindCategoryByID(ctx context.Context, id int64) (*entity.Category, error) {
@@ -65,14 +65,14 @@ func (r *RDBMSGateway) FindCategoryByID(ctx context.Context, id int64) (*entity.
 		return nil, err
 	}
 
-	var categoryObj entity.Category
-	err = db.Where("id_category = ?", id).First(&categoryObj).Error
+	var obj entity.Category
+	err = db.Where("id_category = ?", id).First(&obj).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
 	}
 
-	return &categoryObj, nil
+	return &obj, nil
 }
 
 func (r *RDBMSGateway) DeleteCategory(ctx context.Context, obj *entity.Category) error {
@@ -88,4 +88,18 @@ func (r *RDBMSGateway) DeleteCategory(ctx context.Context, obj *entity.Category)
 		return err
 	}
 	return nil
+}
+
+func (r *RDBMSGateway) FindCategoriesByIDs(ctx context.Context, ids []int64) ([]*entity.Category, error) {
+	log.Info(ctx, "called")
+	db, err := database.ExtractDB(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var objs []*entity.Category
+	err = db.Where(ids).Find(&objs).Error
+	if err != nil {
+		return nil, err
+	}
+	return objs, nil
 }

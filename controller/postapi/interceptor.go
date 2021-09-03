@@ -1,4 +1,4 @@
-package userapi
+package postapi
 
 import (
 	"net/http"

@@ -1,7 +1,6 @@
 package userapi
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -32,7 +31,7 @@ func (r *Controller) loginUserHandler(inputPort loginuser.Inport) gin.HandlerFun
 				ez = ez + e.Translate(util.Trans) + "\n"
 			}
 
-			c.JSON(http.StatusBadRequest, NewErrorResponse(errors.New(ez)))
+			c.JSON(http.StatusBadRequest, NewErrorResponse(apperror.ValidationError.Var(ez)))
 			return
 		}
 

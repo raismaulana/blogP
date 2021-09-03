@@ -3,6 +3,7 @@ package entity
 import (
 	"time"
 
+	"github.com/raismaulana/blogP/application/apperror"
 	"gorm.io/datatypes"
 )
 
@@ -18,4 +19,47 @@ type Post struct {
 	UserID      int64          `gorm:"not null"`                                  //
 	CreatedAt   time.Time      ``                                                 //
 	UpdatedAt   time.Time      ``                                                 //
+}
+
+type PostRequest struct {
+	Title       string         `` //
+	Description string         `` //
+	Content     datatypes.JSON `` //
+	Cover       string         `` //
+	Slug        string         `` //
+	Categories  []Category     `` //
+	Tags        []Tag          `` //
+	UserID      int64          `` //
+}
+
+func NewPost(req PostRequest) (*Post, error) {
+	if req.Title == "" {
+		return nil, apperror.TitleMustNotEmpty
+	}
+	if req.Description == "" {
+		return nil, apperror.DescriptionMustNotEmpty
+	}
+	if _, err := req.Content.MarshalJSON(); err != nil {
+		return nil, apperror.ContentMustBeValidJSON
+	}
+	if req.Cover == "" {
+		return nil, apperror.CoverMustNotEmpty
+	}
+	if req.Slug == "" {
+		return nil, apperror.SlugMustNotEmpty
+	}
+	if req.UserID == 0 {
+		return nil, apperror.AuthorIDMustNotEmpty
+	}
+	obj := Post{
+		Title:       req.Title,
+		Description: req.Description,
+		Content:     req.Content,
+		Cover:       req.Cover,
+		Slug:        req.Slug,
+		Categories:  req.Categories,
+		Tags:        req.Tags,
+		UserID:      req.UserID,
+	}
+	return &obj, nil
 }

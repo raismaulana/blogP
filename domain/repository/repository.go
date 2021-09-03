@@ -78,3 +78,19 @@ type FindCategoryByIDRepo interface {
 type DeleteCategoryRepo interface {
 	DeleteCategory(ctx context.Context, obj *entity.Category) error
 }
+
+type FindPostBySlugRepo interface {
+	FindPostBySlug(ctx context.Context, slug string) (*entity.Post, error)
+}
+
+type SavePostRepo interface {
+	SavePost(ctx context.Context, obj *entity.Post) error
+}
+
+type FindCategoriesByIDsRepo interface {
+	FindCategoriesByIDs(ctx context.Context, ids []int64) ([]*entity.Category, error)
+}
+
+type FindTagsByIDsRepo interface {
+	FindTagsByIDs(ctx context.Context, ids []int64) ([]*entity.Tag, error)
+}

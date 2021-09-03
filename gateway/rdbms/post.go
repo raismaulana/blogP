@@ -8,7 +8,7 @@ import (
 	"github.com/raismaulana/blogP/infrastructure/log"
 )
 
-func (r *RDBMSGateway) FetchTags(ctx context.Context) ([]*entity.Tag, error) {
+func (r *RDBMSGateway) FetchPosts(ctx context.Context) ([]*entity.Post, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -16,7 +16,7 @@ func (r *RDBMSGateway) FetchTags(ctx context.Context) ([]*entity.Tag, error) {
 		return nil, err
 	}
 
-	var objs []*entity.Tag
+	var objs []*entity.Post
 	err = db.Find(&objs).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
@@ -25,57 +25,55 @@ func (r *RDBMSGateway) FetchTags(ctx context.Context) ([]*entity.Tag, error) {
 	return objs, nil
 }
 
-func (r *RDBMSGateway) SaveTag(ctx context.Context, obj *entity.Tag) error {
+func (r *RDBMSGateway) SavePost(ctx context.Context, obj *entity.Post) error {
 	log.Info(ctx, "called")
 	db, err := database.ExtractDB(ctx)
 	if err != nil {
 		return err
 	}
 
-	err = db.Save(obj).Error
+	err = db.Omit("Categories.*,Tags.*").Save(obj).Error
 	if err != nil {
-		log.Error(ctx, err.Error())
 		return err
 	}
-
 	return nil
 }
 
-func (r *RDBMSGateway) FindTagByTag(ctx context.Context, tag string) (*entity.Tag, error) {
+func (r *RDBMSGateway) FindPostBySlug(ctx context.Context, slug string) (*entity.Post, error) {
 	log.Info(ctx, "called")
 	db, err := database.ExtractDB(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var obj entity.Tag
-	err = db.Where("tag = ?", tag).First(&obj).Error
+	var postObj entity.Post
+	err = db.Where("slug = ?", slug).First(&postObj).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
 	}
 
-	return &obj, nil
+	return &postObj, nil
 }
 
-func (r *RDBMSGateway) FindTagByID(ctx context.Context, id int64) (*entity.Tag, error) {
+func (r *RDBMSGateway) FindPostByID(ctx context.Context, id int64) (*entity.Post, error) {
 	log.Info(ctx, "called")
 	db, err := database.ExtractDB(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var obj entity.Tag
-	err = db.Where("id_tag = ?", id).First(&obj).Error
+	var postObj entity.Post
+	err = db.Where("id_post = ?", id).First(&postObj).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
 	}
 
-	return &obj, nil
+	return &postObj, nil
 }
 
-func (r *RDBMSGateway) DeleteTag(ctx context.Context, obj *entity.Tag) error {
+func (r *RDBMSGateway) DeletePost(ctx context.Context, obj *entity.Post) error {
 	log.Info(ctx, "called")
 	db, err := database.ExtractDB(ctx)
 	if err != nil {
@@ -88,18 +86,4 @@ func (r *RDBMSGateway) DeleteTag(ctx context.Context, obj *entity.Tag) error {
 		return err
 	}
 	return nil
-}
-
-func (r *RDBMSGateway) FindTagsByIDs(ctx context.Context, ids []int64) ([]*entity.Tag, error) {
-	log.Info(ctx, "called")
-	db, err := database.ExtractDB(ctx)
-	if err != nil {
-		return nil, err
-	}
-	var objs []*entity.Tag
-	err = db.Where(ids).Find(&objs).Error
-	if err != nil {
-		return nil, err
-	}
-	return objs, nil
 }

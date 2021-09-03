@@ -3,7 +3,6 @@ package shared
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/raismaulana/blogP/domain/entity"
@@ -103,7 +102,8 @@ func (r *SharedGateway) GenerateJWTToken(ctx context.Context, userObj entity.Use
 	log.Info(ctx, "called")
 
 	token, err := r.JWTToken.GenerateToken(auth.GenerateTokenRequest{
-		ID:        strconv.FormatInt(userObj.ID, 10),
+		Subject:   userObj.Name,
+		ID:        userObj.ID,
 		Email:     userObj.Email,
 		Activated: userObj.ActivatedAt.Valid,
 		Role:      "",

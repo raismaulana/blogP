@@ -1,4 +1,4 @@
-package userapi
+package postapi
 
 import (
 	"net/http"
@@ -8,17 +8,18 @@ import (
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/createuser"
+	"github.com/raismaulana/blogP/usecase/createpost"
 )
 
-// createuserHandler ...
-func (r *Controller) CreateUserHandler(inputPort createuser.Inport) gin.HandlerFunc {
+// createPostHandler ...
+func (r *Controller) createPostHandler(inputPort createpost.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
 		ctx := log.Context(c.Request.Context())
 
-		var req createuser.InportRequest
+		var req createpost.InportRequest
+		req.UserID = c.MustGet("auth_id_user").(int64)
 		if err := c.BindJSON(&req); err != nil {
 			log.Error(ctx, "bind", err.Error())
 			errs, ok := err.(validator.ValidationErrors)
@@ -37,17 +38,10 @@ func (r *Controller) CreateUserHandler(inputPort createuser.Inport) gin.HandlerF
 
 		log.Info(ctx, util.MustJSON(req))
 
-		// err := util.ValidatorInput(req)
-		// if err != nil {
-		// 	log.Error(ctx, err.Error())
-		// 	c.JSON(http.StatusBadRequest, NewErrorResponse(err))
-		// 	return
-		// }
-
 		res, err := inputPort.Execute(ctx, req)
 		if err != nil {
 			log.Error(ctx, err.Error())
-			c.JSON(http.StatusOK, NewErrorResponse(err))
+			c.JSON(http.StatusBadRequest, NewErrorResponse(err))
 			return
 		}
 

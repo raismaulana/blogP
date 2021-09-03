@@ -8,6 +8,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/raismaulana/blogP/application"
 	"github.com/raismaulana/blogP/controller/categoryapi"
+	"github.com/raismaulana/blogP/controller/postapi"
 	"github.com/raismaulana/blogP/controller/tagapi"
 	"github.com/raismaulana/blogP/controller/userapi"
 	"github.com/raismaulana/blogP/gateway/master"
@@ -17,6 +18,7 @@ import (
 	"github.com/raismaulana/blogP/infrastructure/server"
 	"github.com/raismaulana/blogP/usecase/activationuser"
 	"github.com/raismaulana/blogP/usecase/createcategory"
+	"github.com/raismaulana/blogP/usecase/createpost"
 	"github.com/raismaulana/blogP/usecase/createtag"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deletecategory"
@@ -42,6 +44,7 @@ import (
 type usingdb struct {
 	server.GinHTTPHandler
 	categoryapiController categoryapi.Controller
+	postapiController     postapi.Controller
 	userapiController     userapi.Controller
 	tagapiController      tagapi.Controller
 	// TODO Another controller will added here ... <<<<<<
@@ -110,6 +113,12 @@ func NewUsingdb() func() application.RegistryContract {
 				DeleteCategoryInport:    deletecategory.NewUsecase(datasource),
 				UpdateCategoryInport:    updatecategory.NewUsecase(datasource),
 			},
+			postapiController: postapi.Controller{
+				JWTToken:         jwtToken,
+				Env:              env,
+				Router:           httpHandler.Router,
+				CreatePostInport: createpost.NewUsecase(datasource),
+			},
 			userapiController: userapi.Controller{
 				JWTToken:                  jwtToken,
 				Env:                       env,
@@ -143,7 +152,9 @@ func NewUsingdb() func() application.RegistryContract {
 
 func (r *usingdb) SetupController() {
 	r.userapiController.RegisterRouter()
+	r.postapiController.RegisterRouter()
 	r.tagapiController.RegisterRouter()
 	r.categoryapiController.RegisterRouter()
+
 	// TODO another router call will added here ... <<<<<<
 }

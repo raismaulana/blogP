@@ -34,4 +34,14 @@ const (
 	TagAlreadyExsist                   ErrorType = "ER400 tag already exsist"                      //
 	CategoryMustNotEmpty               ErrorType = "ER400 category must not empty"                 //
 	CategoryAlreadyExsist              ErrorType = "ER400 category already exsist"                 //
+	DescriptionMustNotEmpty            ErrorType = "ER1000 description must not empty"             //
+	TitleMustNotEmpty                  ErrorType = "ER1000 title must not empty"                   //
+	ContentMustBeValidJSON             ErrorType = "ER1000 content must be valid json"             //
+	AuthorIDMustNotEmpty               ErrorType = "ER1000 author id must not empty"               //
+	SlugMustNotEmpty                   ErrorType = "ER1000 slug must not empty"                    //
+	CoverMustNotEmpty                  ErrorType = "ER1000 cover must not empty"                   //
+	InvalidToken                       ErrorType = "ER1000 invalid token"                          //
+	SlugAlreadyExsist                  ErrorType = "ER1000 slug already exsist"                    //
+	SomeCategoryDoesNotExist           ErrorType = "ER1000 some category does not exist"           //
+	SomeTagDoesNotExist                ErrorType = "ER1000 some tag does not exist"                //
 )

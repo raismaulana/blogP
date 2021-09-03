@@ -1,7 +1,6 @@
 package tagapi
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -41,7 +40,7 @@ func (r *Controller) updateTagHandler(inputPort updatetag.Inport) gin.HandlerFun
 				ez = ez + e.Translate(util.Trans) + "\n"
 			}
 
-			c.JSON(http.StatusBadRequest, NewErrorResponse(errors.New(ez)))
+			c.JSON(http.StatusBadRequest, NewErrorResponse(apperror.ValidationError.Var(ez)))
 			return
 		}
 

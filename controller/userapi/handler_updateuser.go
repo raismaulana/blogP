@@ -1,7 +1,6 @@
 package userapi
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -41,7 +40,7 @@ func (r *Controller) updateUserHandler(inputPort updateuser.Inport) gin.HandlerF
 				ez = ez + e.Translate(util.Trans) + "\n"
 			}
 
-			c.JSON(http.StatusBadRequest, NewErrorResponse(errors.New(ez)))
+			c.JSON(http.StatusBadRequest, NewErrorResponse(apperror.ValidationError.Var(ez)))
 			return
 		}
 
