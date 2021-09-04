@@ -11,7 +11,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase UpdateTag
 type InportRequest struct {
-	ID  int64  `json:"id_tag" binding:"required,numeric"`   //
+	ID  int64  `json:"id_tag" binding:"required"`           //
 	Tag string `json:"tag" binding:"required,min=1,max=15"` //
 }
 

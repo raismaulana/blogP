@@ -6,8 +6,6 @@ import (
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/domain/entity"
 	"github.com/raismaulana/blogP/domain/repository"
-	"github.com/raismaulana/blogP/infrastructure/log"
-	"github.com/raismaulana/blogP/infrastructure/util"
 )
 
 //go:generate mockery --name Outport -output mocks/
@@ -42,7 +40,7 @@ func (r *updateUserInteractor) Execute(ctx context.Context, req InportRequest) (
 			Birthday:   req.Birthday,
 			WebProfile: req.WebProfile,
 		})
-		log.Info(ctx, util.MustJSON(userObj))
+
 		if err != nil {
 			return err
 		}

@@ -31,6 +31,15 @@ type PostRequest struct {
 	Tags        []Tag          `` //
 	UserID      int64          `` //
 }
+type UpdatePostRequest struct {
+	Title       string         `` //
+	Description string         `` //
+	Content     datatypes.JSON `` //
+	Cover       string         `` //
+	Slug        string         `` //
+	Categories  []Category     `` //
+	Tags        []Tag          `` //
+}
 
 func NewPost(req PostRequest) (*Post, error) {
 	if req.Title == "" {
@@ -62,4 +71,36 @@ func NewPost(req PostRequest) (*Post, error) {
 		UserID:      req.UserID,
 	}
 	return &obj, nil
+}
+
+func (r *Post) UpdatePost(req UpdatePostRequest) error {
+	if req.Title == "" {
+		return apperror.TitleMustNotEmpty
+	}
+	if req.Description == "" {
+		return apperror.DescriptionMustNotEmpty
+	}
+	if _, err := req.Content.MarshalJSON(); err != nil {
+		return apperror.ContentMustBeValidJSON
+	}
+	if req.Cover == "" {
+		return apperror.CoverMustNotEmpty
+	}
+	if req.Slug == "" {
+		return apperror.SlugMustNotEmpty
+	}
+
+	r.Title = req.Title
+	r.Description = req.Description
+	r.Content = req.Content
+	r.Cover = req.Cover
+	r.Slug = req.Slug
+	r.Categories = req.Categories
+	r.Tags = req.Tags
+
+	return nil
+}
+func (r *Post) DeleteAssociation() {
+	r.Categories = []Category{}
+	r.Tags = []Tag{}
 }

@@ -11,7 +11,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase UpdateCategory
 type InportRequest struct {
-	ID       int64  `json:"id_tag" binding:"required,numeric"`        //
+	ID       int64  `json:"id_tag" binding:"required"`                //
 	Category string `json:"category" binding:"required,min=1,max=15"` //
 }
 

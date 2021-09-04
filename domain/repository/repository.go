@@ -28,7 +28,7 @@ type FetchUsersRepo interface {
 }
 
 type DeleteUserRepo interface {
-	DeleteUser(ctx context.Context, ID *entity.User) error
+	DeleteUser(ctx context.Context, obj *entity.User) error
 }
 
 type RDBSetRepo interface {
@@ -83,8 +83,16 @@ type FindPostBySlugRepo interface {
 	FindPostBySlug(ctx context.Context, slug string) (*entity.Post, error)
 }
 
+type FindPostByIDRepo interface {
+	FindPostByID(ctx context.Context, id int64) (*entity.Post, error)
+}
+
 type SavePostRepo interface {
 	SavePost(ctx context.Context, obj *entity.Post) error
+}
+
+type CreatePostRepo interface {
+	CreatePost(ctx context.Context, obj *entity.Post) error
 }
 
 type FindCategoriesByIDsRepo interface {
@@ -97,4 +105,8 @@ type FindTagsByIDsRepo interface {
 
 type FetchPostsRepo interface {
 	FetchPosts(ctx context.Context) ([]*entity.Post, error)
+}
+
+type DeletePostRepo interface {
+	DeletePost(ctx context.Context, obj *entity.Post) error
 }

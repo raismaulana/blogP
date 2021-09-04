@@ -1,4 +1,4 @@
-package createpost
+package updatepost
 
 import (
 	"context"
@@ -13,24 +13,33 @@ import (
 
 //go:generate mockery --name Outport -output mocks/
 
-type createPostInteractor struct {
+type updatePostInteractor struct {
 	outport Outport
 }
 
-// NewUsecase is constructor for create default implementation of usecase CreatePost
+// NewUsecase is constructor for create default implementation of usecase UpdatePost
 func NewUsecase(outputPort Outport) Inport {
-	return &createPostInteractor{
+	return &updatePostInteractor{
 		outport: outputPort,
 	}
 }
 
-// Execute the usecase CreatePost
-func (r *createPostInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
+// Execute the usecase UpdatePost
+func (r *updatePostInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
 
 	res := &InportResponse{}
+
+	var postObj *entity.Post
+
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		postObj, err := r.outport.FindPostBySlug(ctx, req.Slug)
-		if postObj != nil || err == nil {
+
+		postIDObj, err := r.outport.FindPostByID(ctx, req.ID)
+		if err != nil {
+			return apperror.ObjectNotFound.Var(postObj)
+		}
+
+		postSlugObj, err := r.outport.FindPostBySlug(ctx, req.Slug)
+		if postIDObj.Slug != req.Slug && (postSlugObj != nil || err == nil) {
 			return apperror.SlugAlreadyExsist
 		}
 		if req.Categories != nil {
@@ -48,6 +57,7 @@ func (r *createPostInteractor) Execute(ctx context.Context, req InportRequest) (
 			}
 		}
 
+		postObj = postIDObj
 		return nil
 	})
 	if err != nil {
@@ -55,31 +65,32 @@ func (r *createPostInteractor) Execute(ctx context.Context, req InportRequest) (
 	}
 
 	err = repository.WithTransaction(ctx, r.outport, func(ctx context.Context) error {
-		postObj, err := entity.NewPost(entity.PostRequest{
+		var vCategory []entity.Category
+		for _, v := range req.Categories {
+			vCategory = append(vCategory, entity.Category{
+				ID: v,
+			})
+		}
+		var vTag []entity.Tag
+		for _, v := range req.Tags {
+			vTag = append(vTag, entity.Tag{
+				ID: v,
+			})
+		}
+		err = postObj.UpdatePost(entity.UpdatePostRequest{
 			Title:       req.Title,
 			Description: req.Description,
 			Content:     datatypes.JSON([]byte(req.Content)),
-			Cover:       req.Cover,
+			Cover:       postObj.Cover,
 			Slug:        req.Slug,
-			Categories:  []entity.Category{},
-			Tags:        []entity.Tag{},
-			UserID:      req.UserID,
+			Categories:  vCategory,
+			Tags:        vTag,
 		})
 		if err != nil {
 			return err
 		}
-		for _, v := range req.Categories {
-			postObj.Categories = append(postObj.Categories, entity.Category{
-				ID: v,
-			})
-		}
-		for _, v := range req.Tags {
-			postObj.Tags = append(postObj.Tags, entity.Tag{
-				ID: v,
-			})
-		}
 
-		err = r.outport.CreatePost(ctx, postObj)
+		err = r.outport.SavePost(ctx, postObj)
 		if err != nil {
 			return err
 		}

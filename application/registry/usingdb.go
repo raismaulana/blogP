@@ -22,6 +22,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/createtag"
 	"github.com/raismaulana/blogP/usecase/createuser"
 	"github.com/raismaulana/blogP/usecase/deletecategory"
+	"github.com/raismaulana/blogP/usecase/deletepost"
 	"github.com/raismaulana/blogP/usecase/deletetag"
 	"github.com/raismaulana/blogP/usecase/deleteuser"
 	"github.com/raismaulana/blogP/usecase/loginuser"
@@ -31,11 +32,14 @@ import (
 	"github.com/raismaulana/blogP/usecase/showalltags"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showcategorybyid"
+	"github.com/raismaulana/blogP/usecase/showpostbyid"
+	"github.com/raismaulana/blogP/usecase/showpostbyslug"
 	"github.com/raismaulana/blogP/usecase/showtagbyid"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
 	"github.com/raismaulana/blogP/usecase/showuserbyid"
 	"github.com/raismaulana/blogP/usecase/showuserbyusername"
 	"github.com/raismaulana/blogP/usecase/updatecategory"
+	"github.com/raismaulana/blogP/usecase/updatepost"
 	"github.com/raismaulana/blogP/usecase/updatetag"
 	"github.com/raismaulana/blogP/usecase/updateuser"
 	"gorm.io/driver/postgres"
@@ -115,11 +119,15 @@ func NewUsingdb() func() application.RegistryContract {
 				UpdateCategoryInport:    updatecategory.NewUsecase(datasource),
 			},
 			postapiController: postapi.Controller{
-				JWTToken:           jwtToken,
-				Env:                env,
-				Router:             httpHandler.Router,
-				CreatePostInport:   createpost.NewUsecase(datasource),
-				ShowAllPostsInport: showallposts.NewUsecase(datasource),
+				JWTToken:             jwtToken,
+				Env:                  env,
+				Router:               httpHandler.Router,
+				CreatePostInport:     createpost.NewUsecase(datasource),
+				ShowAllPostsInport:   showallposts.NewUsecase(datasource),
+				ShowPostBySlugInport: showpostbyslug.NewUsecase(datasource),
+				ShowPostByIDInport:   showpostbyid.NewUsecase(datasource),
+				DeletePostInport:     deletepost.NewUsecase(datasource),
+				UpdatePostInport:     updatepost.NewUsecase(datasource),
 			},
 			userapiController: userapi.Controller{
 				JWTToken:                  jwtToken,

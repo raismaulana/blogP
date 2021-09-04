@@ -11,7 +11,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase ShowCategoryByID
 type InportRequest struct {
-	ID int64 `json:"id_category"`
+	ID int64 `json:"id_category" binding:"required"`
 }
 
 // InportResponse is response payload after running the usecase ShowCategoryByID

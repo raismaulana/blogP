@@ -104,7 +104,7 @@ func (r *RDBMSGateway) DeleteUser(ctx context.Context, obj *entity.User) error {
 		return err
 	}
 
-	err = db.Delete(&obj).Error // delete
+	err = db.Unscoped().Delete(&obj).Error // delete
 	if err != nil {
 		log.Error(ctx, err.Error())
 

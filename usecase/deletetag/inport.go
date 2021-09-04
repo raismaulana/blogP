@@ -11,7 +11,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase DeleteTag
 type InportRequest struct {
-	ID int64 `json:"id_tag" binding:"required,numeric"` //
+	ID int64 `json:"id_tag" binding:"required"` //
 }
 
 // InportResponse is response payload after running the usecase DeleteTag

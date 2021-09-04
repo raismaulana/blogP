@@ -2,24 +2,32 @@ package postapi
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/createpost"
+	"github.com/raismaulana/blogP/usecase/updatepost"
 )
 
-// createPostHandler ...
-func (r *Controller) createPostHandler(inputPort createpost.Inport) gin.HandlerFunc {
+// updatePostHandler ...
+func (r *Controller) updatePostHandler(inputPort updatepost.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
 		ctx := log.Context(c.Request.Context())
 
-		var req createpost.InportRequest
-		req.UserID = c.MustGet("auth_id_user").(int64)
+		id, err := strconv.ParseInt(c.Param("id_post"), 10, 64)
+		if err != nil {
+			log.Error(ctx, err.Error())
+			c.JSON(http.StatusNotFound, NewErrorResponse(apperror.NumberOnlyParam))
+			return
+		}
+
+		var req updatepost.InportRequest
+		req.ID = id
 		if err := c.BindJSON(&req); err != nil {
 			log.Error(ctx, "bind", err.Error())
 			errs, ok := err.(validator.ValidationErrors)

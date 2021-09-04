@@ -8,19 +8,18 @@ import (
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
 	"github.com/raismaulana/blogP/infrastructure/util"
-	"github.com/raismaulana/blogP/usecase/createpost"
+	"github.com/raismaulana/blogP/usecase/showpostbyslug"
 )
 
-// createPostHandler ...
-func (r *Controller) createPostHandler(inputPort createpost.Inport) gin.HandlerFunc {
+// showPostBySlugHandler ...
+func (r *Controller) showPostBySlugHandler(inputPort showpostbyslug.Inport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
 		ctx := log.Context(c.Request.Context())
 
-		var req createpost.InportRequest
-		req.UserID = c.MustGet("auth_id_user").(int64)
-		if err := c.BindJSON(&req); err != nil {
+		var req showpostbyslug.InportRequest
+		if err := c.BindUri(&req); err != nil {
 			log.Error(ctx, "bind", err.Error())
 			errs, ok := err.(validator.ValidationErrors)
 			if !ok {

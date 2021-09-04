@@ -14,7 +14,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase UpdateUser
 type InportRequest struct {
-	ID         int64       `json:"id_user" binding:"required,numeric"`              //
+	ID         int64       `json:"id_user" binding:"required"`                      //
 	Name       string      `json:"name" binding:"required,min=4,max=25"`            //
 	City       string      `json:"city" binding:"required,min=1,max=25"`            //
 	Country    string      `json:"country" binding:"required,min=1,max=25"`         //
