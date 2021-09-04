@@ -116,3 +116,17 @@ func (r *RDBMSGateway) DeleteUser(ctx context.Context, obj *entity.User) error {
 	}
 	return nil
 }
+
+func (r *RDBMSGateway) FetchPostsByUserUsername(ctx context.Context, username string) (*entity.User, error) {
+	db, err := database.ExtractDB(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var obj entity.User
+	err = db.Where("username = ?", username).Preload("Posts.Categories").Preload("Posts.Tags").Find(&obj).Error
+	if err != nil {
+		log.Error(ctx, err.Error())
+		return nil, err
+	}
+	return &obj, nil
+}

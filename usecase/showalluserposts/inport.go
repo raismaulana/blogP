@@ -1,20 +1,21 @@
-package showallposts
+package showalluserposts
 
 import (
 	"context"
 	"time"
 )
 
-// Inport of ShowAllPosts
+// Inport of ShowAllUserPosts
 type Inport interface {
 	Execute(ctx context.Context, req InportRequest) (*InportResponse, error)
 }
 
-// InportRequest is request payload to run the usecase ShowAllPosts
+// InportRequest is request payload to run the usecase ShowAllUserPosts
 type InportRequest struct {
+	Username string `uri:"username" binding:"required"`
 }
 
-// InportResponse is response payload after running the usecase ShowAllPosts
+// InportResponse is response payload after running the usecase ShowAllUserPosts
 type InportResponse struct {
 	Posts []PostResponse `json:"posts"` //
 }

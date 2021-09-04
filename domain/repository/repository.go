@@ -110,3 +110,7 @@ type FetchPostsRepo interface {
 type DeletePostRepo interface {
 	DeletePost(ctx context.Context, obj *entity.Post) error
 }
+
+type FetchPostsByUserUsernameRepo interface {
+	FetchPostsByUserUsername(ctx context.Context, username string) (*entity.User, error)
+}

@@ -15,10 +15,10 @@ type InportRequest struct {
 
 // InportResponse is response payload after running the usecase ShowAllTags
 type InportResponse struct {
-	Tags []Tag `` //
+	Tags []Tag `json:"tags"` //
 }
 
 type Tag struct {
-	ID  int64  ``            //
-	Tag string `json:"name"` //
+	ID  int64  `json:"id_tag"` //
+	Tag string `json:"name"`   //
 }

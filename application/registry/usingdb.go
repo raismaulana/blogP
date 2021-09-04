@@ -30,6 +30,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/showallcategories"
 	"github.com/raismaulana/blogP/usecase/showallposts"
 	"github.com/raismaulana/blogP/usecase/showalltags"
+	"github.com/raismaulana/blogP/usecase/showalluserposts"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showcategorybyid"
 	"github.com/raismaulana/blogP/usecase/showpostbyid"
@@ -143,6 +144,7 @@ func NewUsingdb() func() application.RegistryContract {
 				ActivationUserInport:      activationuser.NewUsecase(datasource),
 				ResetActivationUserInport: resetactivationuser.NewUsecase(datasource),
 				LoginUserInport:           loginuser.NewUsecase(datasource),
+				ShowAllUserPostsInport:    showalluserposts.NewUsecase(datasource),
 			},
 			tagapiController: tagapi.Controller{
 				JWTToken:          jwtToken,

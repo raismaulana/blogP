@@ -9,6 +9,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/deleteuser"
 	"github.com/raismaulana/blogP/usecase/loginuser"
 	"github.com/raismaulana/blogP/usecase/resetactivationuser"
+	"github.com/raismaulana/blogP/usecase/showalluserposts"
 	"github.com/raismaulana/blogP/usecase/showallusers"
 	"github.com/raismaulana/blogP/usecase/showuserbyemail"
 	"github.com/raismaulana/blogP/usecase/showuserbyid"
@@ -30,6 +31,7 @@ type Controller struct {
 	ActivationUserInport      activationuser.Inport
 	ResetActivationUserInport resetactivationuser.Inport
 	LoginUserInport           loginuser.Inport
+	ShowAllUserPostsInport    showalluserposts.Inport
 }
 
 // RegisterRouter registering all the router
@@ -40,6 +42,7 @@ func (r *Controller) RegisterRouter() {
 	r.Router.GET("/v1/users/:id_user/activation", r.activationUserHandler(r.ActivationUserInport))
 	r.Router.GET("/v1/users/email/:email", r.showUserByEmailHandler(r.ShowUserByEmailInport))
 	r.Router.GET("/v1/users/username/:username", r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
+	r.Router.GET("/v1/users/username/:username/posts", r.showAllUserPostsHandler(r.ShowAllUserPostsInport))
 	r.Router.POST("/v1/users", r.CreateUserHandler(r.CreateUserInport))
 	r.Router.PUT("/v1/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
 	r.Router.GET("/v1/users/:id_user/re-activation", r.authorized(), r.resetActivationUserHandler(r.ResetActivationUserInport)) // broken

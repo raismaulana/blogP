@@ -103,10 +103,12 @@ func (r *RDBMSGateway) DeletePost(ctx context.Context, obj *entity.Post) error {
 	}
 	err = db.Model(&obj).Association("Categories").Replace(obj.Categories)
 	if err != nil {
+		log.Error(ctx, err.Error())
 		return err
 	}
 	err = db.Model(&obj).Association("Tags").Replace(obj.Tags)
 	if err != nil {
+		log.Error(ctx, err.Error())
 		return err
 	}
 	err = db.Delete(&obj).Error
