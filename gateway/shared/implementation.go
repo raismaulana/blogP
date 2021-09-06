@@ -106,7 +106,7 @@ func (r *SharedGateway) GenerateJWTToken(ctx context.Context, userObj entity.Use
 		ID:        userObj.ID,
 		Email:     userObj.Email,
 		Activated: userObj.ActivatedAt.Valid,
-		Role:      "",
+		Role:      userObj.Role,
 	})
 	if err != nil {
 		log.Error(ctx, err.Error())

@@ -1,6 +1,7 @@
 package categoryapi
 
 import (
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/raismaulana/blogP/infrastructure/auth"
 	"github.com/raismaulana/blogP/infrastructure/envconfig"
@@ -14,6 +15,7 @@ import (
 type Controller struct {
 	JWTToken                *auth.JWTToken
 	Env                     *envconfig.EnvConfig
+	Enforcer                *casbin.Enforcer
 	Router                  gin.IRouter
 	CreateCategoryInport    createcategory.Inport
 	ShowAllCategoriesInport showallcategories.Inport

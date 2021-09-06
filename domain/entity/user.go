@@ -19,6 +19,7 @@ type User struct {
 	Country     string      `gorm:"type:varchar(50) not null"`                 //
 	Birthday    time.Time   `gorm:"type:date not null"`                        //
 	WebProfile  null.String `gorm:"type:text null"`                            //
+	Role        string      `gorm:"type:varchar(255) not null;default:admin"`  //
 	ActivatedAt null.Time   `gorm:"default:null"`                              //
 	CreatedAt   time.Time   ``                                                 //
 	UpdatedAt   time.Time   ``                                                 //

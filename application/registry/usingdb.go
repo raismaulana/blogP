@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/raismaulana/blogP/application"
 	"github.com/raismaulana/blogP/controller/categoryapi"
@@ -58,51 +59,19 @@ type usingdb struct {
 	// TODO Another controller will added here ... <<<<<<
 }
 
+var (
+	ctx = context.Background()
+)
+
 func NewUsingdb() func() application.RegistryContract {
 	return func() application.RegistryContract {
-		ctx := context.Background()
 
-		env, err := envconfig.NewEnvConfig()
-		if err != nil {
-			log.Error(ctx, "Config Problem %v", err.Error())
-			os.Exit(1)
-		}
-
-		jwtToken, err := auth.NewJWTToken(env)
-		if err != nil {
-			log.Error(context.Background(), "Secret Key Problem %v", err.Error())
-			os.Exit(1)
-		}
-
-		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
-			env.DBHost,
-			env.DBUser,
-			env.DBPassword,
-			env.DBName,
-			env.DBPort,
-		)
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-		if err != nil {
-			panic("failed to connect database")
-		}
-
-		rdb := redis.NewClient(&redis.Options{
-			Addr:     env.RedisHost + ":" + env.RedisPort,
-			Password: env.RedisPassword,
-			DB:       env.RedisDB,
-		})
-		_, err = rdb.Ping(ctx).Result()
-		if err != nil {
-			log.Error(ctx, "%v", err.Error())
-			os.Exit(1)
-		}
-
-		httpHandler, err := server.NewGinHTTPHandler(":" + env.AppPort)
-		if err != nil {
-			log.Error(ctx, "%v", err.Error())
-			os.Exit(1)
-		}
-
+		env := setupEnv()
+		jwtToken := setupJWTToken(env)
+		db := setupDB(env)
+		rdb := setupRedis(env)
+		httpHandler := setupHTTPHandler(env)
+		enforcer := setupCasbinEnforcer()
 		datasource, err := master.NewMasterGateway(env, db, rdb, jwtToken)
 		if err != nil {
 			log.Error(ctx, "%v", err.Error())
@@ -114,6 +83,7 @@ func NewUsingdb() func() application.RegistryContract {
 			categoryapiController: categoryapi.Controller{
 				JWTToken:                jwtToken,
 				Env:                     env,
+				Enforcer:                enforcer,
 				Router:                  httpHandler.Router,
 				CreateCategoryInport:    createcategory.NewUsecase(datasource),
 				ShowAllCategoriesInport: showallcategories.NewUsecase(datasource),
@@ -124,6 +94,7 @@ func NewUsingdb() func() application.RegistryContract {
 			postapiController: postapi.Controller{
 				JWTToken:             jwtToken,
 				Env:                  env,
+				Enforcer:             enforcer,
 				Router:               httpHandler.Router,
 				CreatePostInport:     createpost.NewUsecase(datasource),
 				ShowAllPostsInport:   showallposts.NewUsecase(datasource),
@@ -135,6 +106,7 @@ func NewUsingdb() func() application.RegistryContract {
 			userapiController: userapi.Controller{
 				JWTToken:                  jwtToken,
 				Env:                       env,
+				Enforcer:                  enforcer,
 				Router:                    httpHandler.Router,
 				CreateUserInport:          createuser.NewUsecase(datasource),
 				ShowUserByIDInport:        showuserbyid.NewUsecase(datasource),
@@ -153,6 +125,7 @@ func NewUsingdb() func() application.RegistryContract {
 			tagapiController: tagapi.Controller{
 				JWTToken:          jwtToken,
 				Env:               env,
+				Enforcer:          enforcer,
 				Router:            httpHandler.Router,
 				ShowAllTagsInport: showalltags.NewUsecase(datasource),
 				CreateTagInport:   createtag.NewUsecase(datasource),
@@ -173,4 +146,69 @@ func (r *usingdb) SetupController() {
 	r.categoryapiController.RegisterRouter()
 
 	// TODO another router call will added here ... <<<<<<
+}
+
+func setupEnv() *envconfig.EnvConfig {
+	env, err := envconfig.NewEnvConfig()
+	if err != nil {
+		log.Error(ctx, "Config Problem %v", err.Error())
+		os.Exit(1)
+	}
+	return env
+}
+
+func setupJWTToken(env *envconfig.EnvConfig) *auth.JWTToken {
+	jwtToken, err := auth.NewJWTToken(env)
+	if err != nil {
+		log.Error(context.Background(), "Secret Key Problem %v", err.Error())
+		os.Exit(1)
+	}
+	return jwtToken
+}
+
+func setupDB(env *envconfig.EnvConfig) *gorm.DB {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
+		env.DBHost,
+		env.DBUser,
+		env.DBPassword,
+		env.DBName,
+		env.DBPort,
+	)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+	return db
+}
+
+func setupRedis(env *envconfig.EnvConfig) *redis.Client {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     env.RedisHost + ":" + env.RedisPort,
+		Password: env.RedisPassword,
+		DB:       env.RedisDB,
+	})
+	_, err := rdb.Ping(ctx).Result()
+	if err != nil {
+		log.Error(ctx, "%v", err.Error())
+		os.Exit(1)
+	}
+	return rdb
+}
+
+func setupHTTPHandler(env *envconfig.EnvConfig) server.GinHTTPHandler {
+	httpHandler, err := server.NewGinHTTPHandler(":" + env.AppPort)
+	if err != nil {
+		log.Error(ctx, "%v", err.Error())
+		os.Exit(1)
+	}
+	return httpHandler
+}
+
+func setupCasbinEnforcer() *casbin.Enforcer {
+	e, err := casbin.NewEnforcer("infrastructure/auth/casbin_model.conf", "infrastructure/auth/casbin_policy.csv")
+	if err != nil {
+		log.Error(ctx, "%v", err.Error())
+		os.Exit(1)
+	}
+	return e
 }
