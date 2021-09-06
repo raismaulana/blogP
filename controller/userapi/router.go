@@ -50,9 +50,9 @@ func (r *Controller) RegisterRouter() {
 	r.Router.GET("/v1/users/username/:username", r.authorized(), r.showUserByUsernameHandler(r.ShowUserByUsernameInport))
 	r.Router.GET("/v1/users/username/:username/posts", r.authorized(), r.showAllUserPostsHandler(r.ShowAllUserPostsInport))
 	r.Router.POST("/v1/users", r.authorized(), r.CreateUserHandler(r.CreateUserInport))
-	r.Router.PUT("/v1/users/:id_user", r.authorized(), r.updateUserHandler(r.UpdateUserInport))
+	r.Router.PUT("/v1/users/:id_user", r.authorized(), r.isMine(), r.updateUserHandler(r.UpdateUserInport))
 	r.Router.GET("/v1/users/:id_user/re-activation", r.authorized(), r.resetActivationUserHandler(r.ResetActivationUserInport)) // broken
 	r.Router.POST("/v1/users/auth", r.authorized(), r.loginUserHandler(r.LoginUserInport))
-	r.Router.PATCH("/v1/users/:id_user/password", r.authorized(), r.updatePasswordHandler(r.UpdatePasswordInport))
+	r.Router.PATCH("/v1/users/:id_user/password", r.isMine(), r.authorized(), r.updatePasswordHandler(r.UpdatePasswordInport))
 	r.Router.POST("/v1/users/forgotpassword", r.authorized(), r.forgotPasswordHandler(r.ForgotPasswordInport))
 }

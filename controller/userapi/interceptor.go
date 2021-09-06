@@ -69,3 +69,16 @@ func (r *Controller) authorized() gin.HandlerFunc {
 
 	}
 }
+
+// interceptor for "only me who can access my resource"
+func (r *Controller) isMine() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		switch c.MustGet("auth_role") {
+		case "admin":
+			if c.MustGet("auth_id_user") != c.Param("id_user") {
+				c.AbortWithStatus(http.StatusForbidden)
+				return
+			}
+		}
+	}
+}
