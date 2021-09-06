@@ -33,7 +33,7 @@ type GenerateRandomStringService interface {
 	GenerateRandomString(ctx context.Context) string
 }
 type BuildMailActivationAccountService interface {
-	BuildMailActivationAccount(ctx context.Context, req BuildMailActivationAccountServiceRequest) *BuildMailActivationAccountServiceResponse
+	BuildMailActivationAccount(ctx context.Context, req BuildMailActivationAccountServiceRequest) *BuildMailServiceResponse
 }
 
 type BuildMailActivationAccountServiceRequest struct {
@@ -43,7 +43,7 @@ type BuildMailActivationAccountServiceRequest struct {
 	ActivationToken string `` //
 }
 
-type BuildMailActivationAccountServiceResponse struct {
+type BuildMailServiceResponse struct {
 	To      string `` //
 	Subject string `` //
 	Body    string `` //
@@ -57,4 +57,14 @@ type GenerateJWTTokenServiceRequest struct {
 	ID    string
 	Email string
 	Role  string
+}
+type BuildMailForgotPasswordAccountService interface {
+	BuildMailForgotPasswordAccount(ctx context.Context, req BuildMailForgotPasswordAccountServiceRequest) *BuildMailServiceResponse
+}
+
+type BuildMailForgotPasswordAccountServiceRequest struct {
+	ID                  int64  `` //
+	To                  string `` //
+	Username            string `` //
+	ForgotPasswordToken string `` //
 }

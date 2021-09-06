@@ -69,10 +69,10 @@ func (r *SharedGateway) SendMail(ctx context.Context, req service.SendMailServic
 	return nil
 }
 
-func (r *SharedGateway) BuildMailActivationAccount(ctx context.Context, req service.BuildMailActivationAccountServiceRequest) *service.BuildMailActivationAccountServiceResponse {
+func (r *SharedGateway) BuildMailActivationAccount(ctx context.Context, req service.BuildMailActivationAccountServiceRequest) *service.BuildMailServiceResponse {
 	log.Info(ctx, "called")
 
-	var mail service.BuildMailActivationAccountServiceResponse
+	var mail service.BuildMailServiceResponse
 	mail.To = req.To
 	mail.Subject = "Account Activation"
 	mail.Body = fmt.Sprintf("<p>Hello %s, your activation code is %s or click link below </p><p><a href=\"%susers/%v/activation?email=%s&activation_code=%s\">click me.</a></p><p>This link will expire in 3 days.</p>",
@@ -113,4 +113,21 @@ func (r *SharedGateway) GenerateJWTToken(ctx context.Context, userObj entity.Use
 		return "", err
 	}
 	return token, nil
+}
+
+func (r *SharedGateway) BuildMailForgotPasswordAccount(ctx context.Context, req service.BuildMailForgotPasswordAccountServiceRequest) *service.BuildMailServiceResponse {
+	log.Info(ctx, "called")
+
+	var mail service.BuildMailServiceResponse
+	mail.To = req.To
+	mail.Subject = "Account Activation"
+	mail.Body = fmt.Sprintf("<p>Hello %s, did you forget your password?<p/><p>click link below to reset your password</p><p><a href=\"%susers/%v/password/reset?email=%s&token=%s\">click me.</a></p><p>This link will expire in 1 hour.</p>",
+		req.Username,
+		r.Env.AppBaseURLV1,
+		req.ID,
+		req.To,
+		req.ForgotPasswordToken,
+	)
+
+	return &mail
 }

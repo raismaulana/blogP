@@ -29,7 +29,7 @@ func NewUsecase(outputPort Outport) Inport {
 func (r *createUserInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
 
 	res := &InportResponse{}
-	mail := &service.BuildMailActivationAccountServiceResponse{}
+	mail := &service.BuildMailServiceResponse{}
 
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
 		existingUser, err := r.outport.FindUserByUsername(ctx, req.Username)

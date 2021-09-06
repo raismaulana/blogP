@@ -1,4 +1,4 @@
-package resetactivationuser
+package forgotpassword
 
 import (
 	"context"
@@ -12,50 +12,44 @@ import (
 
 //go:generate mockery --name Outport -output mocks/
 
-type resetActivationUserInteractor struct {
+type forgetPasswordInteractor struct {
 	outport Outport
 }
 
-// NewUsecase is constructor for create default implementation of usecase ResetActivationUser
+// NewUsecase is constructor for create default implementation of usecase ForgetPassword
 func NewUsecase(outputPort Outport) Inport {
-	return &resetActivationUserInteractor{
+	return &forgetPasswordInteractor{
 		outport: outputPort,
 	}
 }
 
-// Execute the usecase ResetActivationUser
-func (r *resetActivationUserInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
+// Execute the usecase ForgetPassword
+func (r *forgetPasswordInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
 
 	res := &InportResponse{}
-	mail := &service.BuildMailServiceResponse{}
 
+	mail := &service.BuildMailServiceResponse{}
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		userObj, err := r.outport.FindUserByID(ctx, req.ID)
+		userObj, err := r.outport.FindUserByEmail(ctx, req.Email)
 		if err != nil {
 			return apperror.ObjectNotFound.Var(userObj)
 		}
-		if userObj.ActivatedAt.Valid {
-			return apperror.UserIsAlreadyActivated
-		}
-
 		RDBkey := userObj.RDBKeyForgotPassword()
 		RDBvalue := r.outport.GenerateRandomString(ctx)
 
-		err = r.outport.RDBSet(ctx, RDBkey, RDBvalue, time.Hour*72)
+		err = r.outport.RDBSet(ctx, RDBkey, RDBvalue, time.Hour)
 		if err != nil {
 			log.Error(ctx, err.Error())
 		}
 
-		mail = r.outport.BuildMailActivationAccount(ctx, service.BuildMailActivationAccountServiceRequest{
-			ID:              userObj.ID,
-			To:              userObj.Email,
-			Name:            userObj.Name,
-			ActivationToken: RDBvalue,
+		mail = r.outport.BuildMailForgotPasswordAccount(ctx, service.BuildMailForgotPasswordAccountServiceRequest{
+			ID:                  userObj.ID,
+			To:                  userObj.Email,
+			Username:            userObj.Username,
+			ForgotPasswordToken: RDBvalue,
 		})
-
 		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -65,6 +59,5 @@ func (r *resetActivationUserInteractor) Execute(ctx context.Context, req InportR
 		Subject: mail.Subject,
 		Body:    mail.Body,
 	})
-
 	return res, nil
 }

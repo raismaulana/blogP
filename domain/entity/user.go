@@ -128,3 +128,15 @@ func (r *User) ValidateActivation(email string, activationCode string) error {
 func (r *User) RDBKeyActivationUser() string {
 	return fmt.Sprintf("users:%v:%s:activation-code", r.ID, r.Email)
 }
+
+func (r *User) RDBKeyForgotPassword() string {
+	return fmt.Sprintf("users:%v:%s:forgot-password", r.ID, r.Email)
+}
+
+func (r *User) ChangePassword(newPassword string) error {
+	if newPassword != "" {
+		return apperror.PasswordMustNotEmpty
+	}
+	r.Password = newPassword
+	return nil
+}

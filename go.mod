@@ -3,6 +3,7 @@ module github.com/raismaulana/blogP
 go 1.16
 
 require (
+	github.com/casbin/casbin/v2 v2.36.2 // indirect
 	github.com/fsnotify/fsnotify v1.5.0 // indirect
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
