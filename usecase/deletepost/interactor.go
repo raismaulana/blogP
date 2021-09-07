@@ -30,6 +30,9 @@ func (r *deletePostInteractor) Execute(ctx context.Context, req InportRequest) (
 		if err != nil {
 			return apperror.ObjectNotFound.Var(postObj)
 		}
+		if postObj.UserID != req.UserID && req.Role != "king" {
+			return apperror.Forbidden
+		}
 		postObj.DeleteAssociation()
 		err = r.outport.DeletePost(ctx, postObj)
 		if err != nil {

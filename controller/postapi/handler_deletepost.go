@@ -27,7 +27,8 @@ func (r *Controller) deletePostHandler(inputPort deletepost.Inport) gin.HandlerF
 
 		var req deletepost.InportRequest
 		req.ID = id
-
+		req.UserID = c.MustGet("auth_id_user").(int64)
+		req.Role = c.MustGet("auth_role").(string)
 		log.Info(ctx, util.MustJSON(req))
 
 		res, err := inputPort.Execute(ctx, req)

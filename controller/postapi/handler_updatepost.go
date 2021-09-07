@@ -28,6 +28,8 @@ func (r *Controller) updatePostHandler(inputPort updatepost.Inport) gin.HandlerF
 
 		var req updatepost.InportRequest
 		req.ID = id
+		req.UserID = c.MustGet("auth_id_user").(int64)
+		req.Role = c.MustGet("auth_role").(string)
 		if err := c.BindJSON(&req); err != nil {
 			log.Error(ctx, "bind", err.Error())
 			errs, ok := err.(validator.ValidationErrors)

@@ -44,4 +44,5 @@ const (
 	SlugAlreadyExsist                  ErrorType = "ER1000 slug already exsist"                    //
 	SomeCategoryDoesNotExist           ErrorType = "ER1000 some category does not exist"           //
 	SomeTagDoesNotExist                ErrorType = "ER1000 some tag does not exist"                //
+	Forbidden                          ErrorType = "ER1000 forbidden"                              //
 )

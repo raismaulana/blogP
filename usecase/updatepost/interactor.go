@@ -37,6 +37,9 @@ func (r *updatePostInteractor) Execute(ctx context.Context, req InportRequest) (
 		if err != nil {
 			return apperror.ObjectNotFound.Var(postObj)
 		}
+		if postIDObj.UserID != req.UserID && req.Role != "king" {
+			return apperror.Forbidden
+		}
 
 		postSlugObj, err := r.outport.FindPostBySlug(ctx, req.Slug)
 		if postIDObj.Slug != req.Slug && (postSlugObj != nil || err == nil) {

@@ -19,7 +19,8 @@ type InportRequest struct {
 	Slug        string  `json:"slug" binding:"required,min=5,max=40"`        //
 	Categories  []int64 `json:"categories" binding:"unique"`                 //
 	Tags        []int64 `json:"tags" binding:"unique"`                       //
-
+	UserID      int64   `json:"id_user" binding:"required"`                  //
+	Role        string  `json:"role" binding:"required"`                     //
 }
 
 // InportResponse is response payload after running the usecase UpdatePost
