@@ -28,12 +28,12 @@ func RDBMSMigration(db *gorm.DB, env *envconfig.EnvConfig) error {
 		&entity.Tag{}); err != nil {
 		return err
 	}
-	// this transaction will always make user with id 1 become a king
+	// this transaction will always make user default super user is exsist
 	if err := db.Transaction(func(tx *gorm.DB) error {
 		var user entity.User
 
-		err := tx.Where("id_user = ? AND role = ?", 1, "king").First(&user).Error
-		if err == nil {
+		err := tx.Where("username = ?", env.SuperUsername).First(&user).Error
+		if err == nil && user.Role == "king" {
 			return errors.New("super user is already exsist")
 		}
 
@@ -41,9 +41,7 @@ func RDBMSMigration(db *gorm.DB, env *envconfig.EnvConfig) error {
 		if err != nil {
 			return err
 		}
-
 		user = entity.User{
-			ID:          1,
 			Username:    env.SuperUsername,
 			Name:        "King",
 			Email:       "king@mize.com",
