@@ -10,7 +10,7 @@ import (
 
 type EnvConfig struct {
 	SuperUsername string `mapstructure:"super_username"` //
-	Password      string `mapstructure:"super_password"` //
+	SuperPassword string `mapstructure:"super_password"` //
 	DBHost        string `mapstructure:"db_host"`        //
 	DBPort        string `mapstructure:"db_port"`        //
 	DBName        string `mapstructure:"db_name"`        //
