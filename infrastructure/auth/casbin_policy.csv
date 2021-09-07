@@ -8,7 +8,6 @@ p, admin, /v1/users/username/:username/posts, GET
 p, admin, /v1/users, POST
 p, admin, /v1/users/:id_user, PUT
 p, admin, /v1/users/:id_user/re-activation, GET
-p, admin, /v1/users/auth, POST
 p, admin, /v1/users/:id_user/password, PATCH
 p, admin, /v1/users/forgotpassword, POST
 p, admin, /v1/tags, GET
@@ -33,6 +32,7 @@ p, guest, /v1/users/:id_user/activation, GET
 p, guest, /v1/users/email/:email, GET
 p, guest, /v1/users/username/:username, GET
 p, guest, /v1/users/username/:username/posts, GET
+p, guest, /v1/users/auth, POST
 p, guest, /v1/tags, GET
 p, guest, /v1/tags/:id_tag, GET
 p, guest, /v1/categories, GET
