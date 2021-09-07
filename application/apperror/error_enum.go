@@ -6,10 +6,10 @@ package apperror
 */
 
 const (
-	FailUnmarshalResponseBodyError     ErrorType = "ER1000 Fail to unmarshal response body"        // used by controller
-	ObjectNotFound                     ErrorType = "ER1001 Object %s is not found"                 // used by injected repo in interactor
+	FailUnmarshalResponseBodyError     ErrorType = "ER400 Fail to unmarshal response body"         // used by controller
+	ObjectNotFound                     ErrorType = "ER404 Object %s is not found"                  // used by injected repo in interactor
 	UnrecognizedEnum                   ErrorType = "ER1002 %s is not recognized %s enum"           // used by enum
-	DatabaseNotFoundInContextError     ErrorType = "ER1003 Database is not found in context"       // used by repoimpl
+	DatabaseNotFoundInContextError     ErrorType = "ER404 Database is not found in context"        // used by repoimpl
 	ValidationError                    ErrorType = "ER400 %s"                                      // used by repoimpl
 	UsernameMustNotEmpty               ErrorType = "ER400 username must not empty"                 // used by entity/user
 	NameMustNotEmpty                   ErrorType = "ER400 name must not empty"                     // used by entity/user
@@ -34,15 +34,15 @@ const (
 	TagAlreadyExsist                   ErrorType = "ER400 tag already exsist"                      //
 	CategoryMustNotEmpty               ErrorType = "ER400 category must not empty"                 //
 	CategoryAlreadyExsist              ErrorType = "ER400 category already exsist"                 //
-	DescriptionMustNotEmpty            ErrorType = "ER1000 description must not empty"             //
-	TitleMustNotEmpty                  ErrorType = "ER1000 title must not empty"                   //
-	ContentMustBeValidJSON             ErrorType = "ER1000 content must be valid json"             //
-	AuthorIDMustNotEmpty               ErrorType = "ER1000 author id must not empty"               //
-	SlugMustNotEmpty                   ErrorType = "ER1000 slug must not empty"                    //
-	CoverMustNotEmpty                  ErrorType = "ER1000 cover must not empty"                   //
-	InvalidToken                       ErrorType = "ER1000 invalid token"                          //
-	SlugAlreadyExsist                  ErrorType = "ER1000 slug already exsist"                    //
-	SomeCategoryDoesNotExist           ErrorType = "ER1000 some category does not exist"           //
-	SomeTagDoesNotExist                ErrorType = "ER1000 some tag does not exist"                //
-	Forbidden                          ErrorType = "ER1000 forbidden"                              //
+	DescriptionMustNotEmpty            ErrorType = "ER400 description must not empty"              //
+	TitleMustNotEmpty                  ErrorType = "ER400 title must not empty"                    //
+	ContentMustBeValidJSON             ErrorType = "ER400 content must be valid json"              //
+	AuthorIDMustNotEmpty               ErrorType = "ER400 author id must not empty"                //
+	SlugMustNotEmpty                   ErrorType = "ER400 slug must not empty"                     //
+	CoverMustNotEmpty                  ErrorType = "ER400 cover must not empty"                    //
+	InvalidToken                       ErrorType = "ER401 invalid token"                           //
+	SlugAlreadyExsist                  ErrorType = "ER400 slug already exsist"                     //
+	SomeCategoryDoesNotExist           ErrorType = "ER400 some category does not exist"            //
+	SomeTagDoesNotExist                ErrorType = "ER400 some tag does not exist"                 //
+	Forbidden                          ErrorType = "ER403 forbidden"                               //
 )
