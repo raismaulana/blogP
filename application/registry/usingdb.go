@@ -72,6 +72,7 @@ func NewUsingdb() func() application.RegistryContract {
 		rdb := setupRedis(env)
 		httpHandler := setupHTTPHandler(env)
 		enforcer := setupCasbinEnforcer()
+
 		datasource, err := master.NewMasterGateway(env, db, rdb, jwtToken)
 		if err != nil {
 			log.Error(ctx, "%v", err.Error())

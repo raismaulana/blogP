@@ -14,7 +14,7 @@ type RDBMSGateway struct {
 
 // NewRDBMSGateway ...
 func NewRDBMSGateway(env *envconfig.EnvConfig, db *gorm.DB) (*RDBMSGateway, error) {
-	err := migration.RDBMSMigration(db)
+	err := migration.RDBMSMigration(db, env)
 	if err != nil {
 		return nil, err
 	}
