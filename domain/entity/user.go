@@ -10,31 +10,33 @@ import (
 )
 
 type User struct {
-	ID          int64       `gorm:"primary_key:auto_increment;column:id_user"` //
-	Username    string      `gorm:"type:varchar(12) unique not null"`          //
-	Name        string      `gorm:"type:varchar(20) not null"`                 //
-	Email       string      `gorm:"type:varchar(45) unique not null"`          //
-	Password    string      `gorm:"type:varchar(255) not null"`                //
-	City        string      `gorm:"type:varchar(50) not null"`                 //
-	Country     string      `gorm:"type:varchar(50) not null"`                 //
-	Birthday    time.Time   `gorm:"type:date not null"`                        //
-	WebProfile  null.String `gorm:"type:text null"`                            //
-	Role        string      `gorm:"type:varchar(255) not null;default:admin"`  //
-	ActivatedAt null.Time   `gorm:"default:null"`                              //
-	CreatedAt   time.Time   ``                                                 //
-	UpdatedAt   time.Time   ``                                                 //
-	Posts       []Post      ``                                                 //
+	ID           int64       `gorm:"primary_key:auto_increment;column:id_user"` //
+	Username     string      `gorm:"type:varchar(12) unique not null"`          //
+	Name         string      `gorm:"type:varchar(20) not null"`                 //
+	Email        string      `gorm:"type:varchar(45) unique not null"`          //
+	Password     string      `gorm:"type:varchar(255) not null"`                //
+	City         string      `gorm:"type:varchar(50) not null"`                 //
+	Country      string      `gorm:"type:varchar(50) not null"`                 //
+	Birthday     time.Time   `gorm:"type:date not null"`                        //
+	PhotoProfile string      `gorm:"type:text null"`                            //
+	WebProfile   null.String `gorm:"type:text null"`                            //
+	Role         string      `gorm:"type:varchar(255) not null;default:admin"`  //
+	ActivatedAt  null.Time   `gorm:"default:null"`                              //
+	CreatedAt    time.Time   ``                                                 //
+	UpdatedAt    time.Time   ``                                                 //
+	Posts        []Post      ``                                                 //
 }
 
 type UserRequest struct {
-	Username   string      `` //
-	Name       string      `` //
-	Email      string      `` //
-	Password   string      `` //
-	City       string      `` //
-	Country    string      `` //
-	Birthday   time.Time   `` //
-	WebProfile null.String `` //
+	Username     string      `` //
+	Name         string      `` //
+	Email        string      `` //
+	Password     string      `` //
+	City         string      `` //
+	Country      string      `` //
+	Birthday     time.Time   `` //
+	PhotoProfile string      `` //
+	WebProfile   null.String `` //
 }
 
 type UserUpdateRequest struct {
@@ -71,15 +73,16 @@ func NewUser(req UserRequest) (*User, error) {
 	}
 
 	obj := User{
-		Username:    req.Username,
-		Name:        req.Name,
-		Email:       req.Email,
-		Password:    req.Password,
-		City:        req.City,
-		Country:     req.Country,
-		Birthday:    req.Birthday,
-		WebProfile:  req.WebProfile,
-		ActivatedAt: null.Time{},
+		Username:     req.Username,
+		Name:         req.Name,
+		Email:        req.Email,
+		Password:     req.Password,
+		City:         req.City,
+		Country:      req.Country,
+		Birthday:     req.Birthday,
+		PhotoProfile: req.PhotoProfile,
+		WebProfile:   req.WebProfile,
+		ActivatedAt:  null.Time{},
 	}
 
 	return &obj, nil

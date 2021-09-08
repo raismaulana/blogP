@@ -18,26 +18,28 @@ import (
 	"github.com/raismaulana/blogP/usecase/showuserbyusername"
 	"github.com/raismaulana/blogP/usecase/updatepassword"
 	"github.com/raismaulana/blogP/usecase/updateuser"
+	"github.com/raismaulana/blogP/usecase/uploaduserphotoprofile"
 )
 
 type Controller struct {
-	JWTToken                  *auth.JWTToken
-	Env                       *envconfig.EnvConfig
-	Enforcer                  *casbin.Enforcer
-	Router                    gin.IRouter
-	CreateUserInport          createuser.Inport
-	ShowUserByIDInport        showuserbyid.Inport
-	ShowUserByEmailInport     showuserbyemail.Inport
-	ShowUserByUsernameInport  showuserbyusername.Inport
-	ShowAllUsersInport        showallusers.Inport
-	UpdateUserInport          updateuser.Inport
-	DeleteUserInport          deleteuser.Inport
-	ActivationUserInport      activationuser.Inport
-	ResetActivationUserInport resetactivationuser.Inport
-	LoginUserInport           loginuser.Inport
-	ShowAllUserPostsInport    showalluserposts.Inport
-	UpdatePasswordInport      updatepassword.Inport
-	ForgotPasswordInport      forgotpassword.Inport
+	JWTToken                     *auth.JWTToken
+	Env                          *envconfig.EnvConfig
+	Enforcer                     *casbin.Enforcer
+	Router                       gin.IRouter
+	CreateUserInport             createuser.Inport
+	ShowUserByIDInport           showuserbyid.Inport
+	ShowUserByEmailInport        showuserbyemail.Inport
+	ShowUserByUsernameInport     showuserbyusername.Inport
+	ShowAllUsersInport           showallusers.Inport
+	UpdateUserInport             updateuser.Inport
+	DeleteUserInport             deleteuser.Inport
+	ActivationUserInport         activationuser.Inport
+	ResetActivationUserInport    resetactivationuser.Inport
+	LoginUserInport              loginuser.Inport
+	ShowAllUserPostsInport       showalluserposts.Inport
+	UpdatePasswordInport         updatepassword.Inport
+	ForgotPasswordInport         forgotpassword.Inport
+	UploadUserPhotoProfileInport uploaduserphotoprofile.Inport
 }
 
 // RegisterRouter registering all the router
@@ -55,4 +57,5 @@ func (r *Controller) RegisterRouter() {
 	r.Router.POST("/v1/users/auth", r.authorized(), r.loginUserHandler(r.LoginUserInport))
 	r.Router.PATCH("/v1/users/:id_user/password", r.isMine(), r.authorized(), r.updatePasswordHandler(r.UpdatePasswordInport))
 	r.Router.POST("/v1/users/forgotpassword", r.authorized(), r.forgotPasswordHandler(r.ForgotPasswordInport))
+	r.Router.POST("/v1/users/:id_user/photo-profile", r.authorized(), r.isMine(), r.uploadUserPhotoProfileHandler(r.UploadUserPhotoProfileInport))
 }

@@ -26,6 +26,7 @@ p, admin, /v1/posts/:id_post, GET
 p, admin, /v1/posts/slug/:slug, GET
 p, admin, /v1/posts/:id_post, PUT
 p, admin, /v1/posts/:id_post, DELETE
+p, admin, /v1/users/:id_user/photo-profile, POST
 p, guest, /v1/users, GET
 p, guest, /v1/users/:id_user, GET
 p, guest, /v1/users/:id_user/activation, GET

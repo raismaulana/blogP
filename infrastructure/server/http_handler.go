@@ -25,6 +25,7 @@ type GinHTTPHandler struct {
 func NewGinHTTPHandler(address string) (GinHTTPHandler, error) {
 
 	router := gin.Default()
+	router.Static("/public", "./public")
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		en := en.New()
 		uni := ut.New(en, en)

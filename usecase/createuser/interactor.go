@@ -56,14 +56,15 @@ func (r *createUserInteractor) Execute(ctx context.Context, req InportRequest) (
 		}
 
 		userObj, err := entity.NewUser(entity.UserRequest{
-			Username:   req.Username,
-			Name:       req.Name,
-			Email:      req.Email,
-			Password:   hashedPassword,
-			City:       req.City,
-			Country:    req.Country,
-			Birthday:   req.Birthday,
-			WebProfile: null.StringFromPtr(req.WebProfile),
+			Username:     req.Username,
+			Name:         req.Name,
+			Email:        req.Email,
+			Password:     hashedPassword,
+			City:         req.City,
+			Country:      req.Country,
+			Birthday:     req.Birthday,
+			PhotoProfile: "/public/images/l60Hf.png",
+			WebProfile:   null.StringFromPtr(req.WebProfile),
 		})
 		if err != nil {
 			return err

@@ -42,16 +42,17 @@ func RDBMSMigration(db *gorm.DB, env *envconfig.EnvConfig) error {
 			return err
 		}
 		user = entity.User{
-			Username:    env.SuperUsername,
-			Name:        "King",
-			Email:       "king@mize.com",
-			Password:    string(hashedPassword),
-			City:        "Jakarta",
-			Country:     "Indonesia",
-			Birthday:    time.Date(2020, 8, 2, 0, 0, 0, 0, time.UTC),
-			WebProfile:  null.String{},
-			Role:        "king",
-			ActivatedAt: null.NewTime(time.Now(), true),
+			Username:     env.SuperUsername,
+			Name:         "King",
+			Email:        "king@mize.com",
+			Password:     string(hashedPassword),
+			City:         "Jakarta",
+			Country:      "Indonesia",
+			Birthday:     time.Date(2020, 8, 2, 0, 0, 0, 0, time.UTC),
+			PhotoProfile: "/public/images/l60Hf.png",
+			WebProfile:   null.String{},
+			Role:         "king",
+			ActivatedAt:  null.NewTime(time.Now(), true),
 		}
 		err = tx.Save(&user).Error
 		if err != nil {

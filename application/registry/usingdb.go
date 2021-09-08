@@ -46,6 +46,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/updatepost"
 	"github.com/raismaulana/blogP/usecase/updatetag"
 	"github.com/raismaulana/blogP/usecase/updateuser"
+	"github.com/raismaulana/blogP/usecase/uploaduserphotoprofile"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -105,23 +106,24 @@ func NewUsingdb() func() application.RegistryContract {
 				UpdatePostInport:     updatepost.NewUsecase(datasource),
 			},
 			userapiController: userapi.Controller{
-				JWTToken:                  jwtToken,
-				Env:                       env,
-				Enforcer:                  enforcer,
-				Router:                    httpHandler.Router,
-				CreateUserInport:          createuser.NewUsecase(datasource),
-				ShowUserByIDInport:        showuserbyid.NewUsecase(datasource),
-				ShowUserByEmailInport:     showuserbyemail.NewUsecase(datasource),
-				ShowUserByUsernameInport:  showuserbyusername.NewUsecase(datasource),
-				ShowAllUsersInport:        showallusers.NewUsecase(datasource),
-				UpdateUserInport:          updateuser.NewUsecase(datasource),
-				DeleteUserInport:          deleteuser.NewUsecase(datasource),
-				ActivationUserInport:      activationuser.NewUsecase(datasource),
-				ResetActivationUserInport: resetactivationuser.NewUsecase(datasource),
-				LoginUserInport:           loginuser.NewUsecase(datasource),
-				ShowAllUserPostsInport:    showalluserposts.NewUsecase(datasource),
-				UpdatePasswordInport:      updatepassword.NewUsecase(datasource),
-				ForgotPasswordInport:      forgotpassword.NewUsecase(datasource),
+				JWTToken:                     jwtToken,
+				Env:                          env,
+				Enforcer:                     enforcer,
+				Router:                       httpHandler.Router,
+				CreateUserInport:             createuser.NewUsecase(datasource),
+				ShowUserByIDInport:           showuserbyid.NewUsecase(datasource),
+				ShowUserByEmailInport:        showuserbyemail.NewUsecase(datasource),
+				ShowUserByUsernameInport:     showuserbyusername.NewUsecase(datasource),
+				ShowAllUsersInport:           showallusers.NewUsecase(datasource),
+				UpdateUserInport:             updateuser.NewUsecase(datasource),
+				DeleteUserInport:             deleteuser.NewUsecase(datasource),
+				ActivationUserInport:         activationuser.NewUsecase(datasource),
+				ResetActivationUserInport:    resetactivationuser.NewUsecase(datasource),
+				LoginUserInport:              loginuser.NewUsecase(datasource),
+				ShowAllUserPostsInport:       showalluserposts.NewUsecase(datasource),
+				UpdatePasswordInport:         updatepassword.NewUsecase(datasource),
+				ForgotPasswordInport:         forgotpassword.NewUsecase(datasource),
+				UploadUserPhotoProfileInport: uploaduserphotoprofile.NewUsecase(datasource),
 			},
 			tagapiController: tagapi.Controller{
 				JWTToken:          jwtToken,

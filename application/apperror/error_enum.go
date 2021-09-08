@@ -8,8 +8,9 @@ package apperror
 const (
 	FailUnmarshalResponseBodyError     ErrorType = "ER400 Fail to unmarshal response body"         // used by controller
 	ObjectNotFound                     ErrorType = "ER404 Object %s is not found"                  // used by injected repo in interactor
-	UnrecognizedEnum                   ErrorType = "ER1002 %s is not recognized %s enum"           // used by enum
+	UnrecognizedEnum                   ErrorType = "ER500 %s is not recognized %s enum"            // used by enum
 	DatabaseNotFoundInContextError     ErrorType = "ER404 Database is not found in context"        // used by repoimpl
+	ServerError                        ErrorType = "ER500 %s"                                      // used by repoimpl
 	ValidationError                    ErrorType = "ER400 %s"                                      // used by repoimpl
 	UsernameMustNotEmpty               ErrorType = "ER400 username must not empty"                 // used by entity/user
 	NameMustNotEmpty                   ErrorType = "ER400 name must not empty"                     // used by entity/user
@@ -45,4 +46,6 @@ const (
 	SomeCategoryDoesNotExist           ErrorType = "ER400 some category does not exist"            //
 	SomeTagDoesNotExist                ErrorType = "ER400 some tag does not exist"                 //
 	Forbidden                          ErrorType = "ER403 forbidden"                               //
+	FileAllowedMaxSizeIs               ErrorType = "ER400 file allowed max size is %s"             //
+	OnlyJPEGOrJPGAllowed               ErrorType = "ER400 only jpeg or jpg allowed"                //
 )
