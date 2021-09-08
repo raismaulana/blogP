@@ -45,8 +45,8 @@ func (r *uploadUserPhotoProfileInteractor) Execute(ctx context.Context, req Inpo
 	}
 	defer src.Close()
 	filename := r.outport.GenerateRandomString(ctx)
-	path := "./public/images/" + filename + ".jpg"
-	out, err := os.Create(path)
+	path := "/public/images/" + filename + ".jpg"
+	out, err := os.Create("." + path)
 	if err != nil {
 		return nil, apperror.ServerError.Var(err)
 	}
