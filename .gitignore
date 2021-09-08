@@ -17,3 +17,4 @@
 .vscode
 .editorconfig
 config.yaml
+/public/images/*.jpeg
