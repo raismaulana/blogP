@@ -35,15 +35,16 @@ func (r *showAllUsersInteractor) Execute(ctx context.Context, req InportRequest)
 
 		for _, v := range userObj {
 			res.Users = append(res.Users, UsersResponse{
-				ID:         v.ID,
-				Username:   v.Username,
-				Name:       v.Name,
-				Email:      v.Email,
-				City:       v.City,
-				Country:    v.Country,
-				Birthday:   v.Birthday,
-				WebProfile: v.WebProfile,
-				Activated:  v.ActivatedAt.Valid,
+				ID:           v.ID,
+				Username:     v.Username,
+				Name:         v.Name,
+				Email:        v.Email,
+				City:         v.City,
+				Country:      v.Country,
+				Birthday:     v.Birthday,
+				WebProfile:   v.WebProfile,
+				PhotoProfile: r.outport.GetBaseURL(ctx) + v.PhotoProfile,
+				Activated:    v.ActivatedAt.Valid,
 			})
 		}
 

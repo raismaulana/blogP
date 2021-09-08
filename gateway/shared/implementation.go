@@ -26,6 +26,11 @@ func NewSharedGateway(env *envconfig.EnvConfig, jwtToken *auth.JWTToken) *Shared
 	}
 }
 
+func (r *SharedGateway) GetBaseURL(ctx context.Context) string {
+	log.Info(ctx, "called")
+	return r.Env.AppBaseURL
+}
+
 func (r *SharedGateway) HashPassword(ctx context.Context, plainPassword string) (string, error) {
 	log.Info(ctx, "called")
 
@@ -75,7 +80,7 @@ func (r *SharedGateway) BuildMailActivationAccount(ctx context.Context, req serv
 	var mail service.BuildMailServiceResponse
 	mail.To = req.To
 	mail.Subject = "Account Activation"
-	mail.Body = fmt.Sprintf("<p>Hello %s, your activation code is %s or click link below </p><p><a href=\"%susers/%v/activation?email=%s&activation_code=%s\">click me.</a></p><p>This link will expire in 3 days.</p>",
+	mail.Body = fmt.Sprintf("<p>Hello %s, your activation code is %s or click link below </p><p><a href=\"%s/users/%v/activation?email=%s&activation_code=%s\">click me.</a></p><p>This link will expire in 3 days.</p>",
 		req.Name,
 		req.ActivationToken,
 		r.Env.AppBaseURLV1,
@@ -121,7 +126,7 @@ func (r *SharedGateway) BuildMailForgotPasswordAccount(ctx context.Context, req 
 	var mail service.BuildMailServiceResponse
 	mail.To = req.To
 	mail.Subject = "Account Activation"
-	mail.Body = fmt.Sprintf("<p>Hello %s, did you forget your password?<p/><p>click link below to reset your password</p><p><a href=\"%susers/%v/password/reset?email=%s&token=%s\">click me.</a></p><p>This link will expire in 1 hour.</p>",
+	mail.Body = fmt.Sprintf("<p>Hello %s, did you forget your password?<p/><p>click link below to reset your password</p><p><a href=\"%s/users/%v/password/reset?email=%s&token=%s\">click me.</a></p><p>This link will expire in 1 hour.</p>",
 		req.Username,
 		r.Env.AppBaseURLV1,
 		req.ID,

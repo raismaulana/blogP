@@ -6,6 +6,10 @@ import (
 	"github.com/raismaulana/blogP/domain/entity"
 )
 
+type GetBaseURLRepo interface {
+	GetBaseURL(ctx context.Context) string
+}
+
 type HashPasswordService interface {
 	HashPassword(ctx context.Context, plainPassword string) (string, error)
 }
