@@ -138,7 +138,7 @@ func (r *User) RDBKeyForgotPassword() string {
 }
 
 func (r *User) ChangePassword(newPassword string) error {
-	if newPassword != "" {
+	if newPassword == "" {
 		return apperror.PasswordMustNotEmpty
 	}
 	r.Password = newPassword
