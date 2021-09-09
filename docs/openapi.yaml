@@ -37,12 +37,11 @@ paths:
   /v1/users:
     get:
       tags:
-        - "v1"
+        - /v1/users
       summary: Returns a list of users.
-      description: Only user who has admin role can use this endpoint.
+      description: Everyone can use this endpoint.
       security:
-        - bearerAuth:
-            -
+        - bearerAuth: []
       responses:
         "200":
           description: Return a JSON array of users if success true.
@@ -52,13 +51,19 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/usersArray"
                   - $ref: "#/components/schemas/errorResponse"
-        "403":
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
           $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
     post:
       tags:
-        - "v1"
+        - /v1/users
       summary: User registration.
-      description: Register (create) new users.
+      description: Only super user can use this endpoint.
+      security:
+        - bearerAuth: []
       requestBody:
         description: data user
         required: true
@@ -113,37 +118,18 @@ paths:
                   - $ref: "#/components/schemas/errorResponse"
         "400":
           $ref: "#/components/responses/badrequest"
-  /v1/users/{id}:
-    get:
-      tags:
-        - "v1"
-      summary: Returns a user by id.
-      description: Return null data if no user has the id.
-      security:
-        - bearerAuth:
-            -
-      parameters:
-        - $ref: "#/components/parameters/userID"
-      responses:
-        "200":
-          description: Return a JSON object of users if success true
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/usersResponse"
-                  - $ref: "#/components/schemas/errorResponse"
-        "400":
-          $ref: "#/components/responses/badrequest"
-        "403":
+        "401":
           $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/users/{id}:
     delete:
       tags:
-        - "v1"
+        - /v1/users
       summary: Delete user by id.
+      description: Only super user can use this endpoint.
       security:
-        - bearerAuth:
-            -
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/userID"
       responses:
@@ -157,16 +143,41 @@ paths:
                   - $ref: "#/components/schemas/errorResponse"
         "400":
           $ref: "#/components/responses/badrequest"
-        "403":
+        "401":
           $ref: "#/components/responses/unauthorized"
-
+        "403":
+          $ref: "#/components/responses/forbidden"
+    get:
+      tags:
+        - /v1/users
+      summary: Returns an user by id.
+      description: Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userID"
+      responses:
+        "200":
+          description: Return a JSON object of users if success true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/usersResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
     put:
       tags:
-        - "v1"
+        - /v1/users
       summary: Update user.
+      description: Only super user and the owner of resource can use this endpoint.
       security:
-        - bearerAuth:
-            -
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/userID"
       requestBody:
@@ -206,13 +217,18 @@ paths:
                   - $ref: "#/components/schemas/errorResponse"
         "400":
           $ref: "#/components/responses/badrequest"
-        "403":
+        "401":
           $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
   /v1/users/{id}/activation:
     get:
       tags:
-        - "v1"
+        - /v1/users
       summary: User activation
+      description: Activation link from email. Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/userID"
         - in: query
@@ -236,14 +252,94 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/successResponse"
                   - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/users/{id}/password:
+    patch:
+      tags:
+        - /v1/users
+      summary: Change user password
+      description: Only super user and the owner of resouce can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userID"
+      requestBody:
+        description: JSON
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                old_password:
+                  type: string
+                new_password:
+                  type: string
+                  minLength: 6
+                  maxLength: 25
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/users/{id}/photo-profile:
+    post:
+      tags:
+        - /v1/users
+      summary: Change user photo profile
+      description: Only super user and the owner of resouce can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userID"
+      requestBody:
+        description: multipart/form-data JPEG/JPG only
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                photo_profile:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
   /v1/users/{id}/re-activation:
     get:
       tags:
-        - "v1"
-      summary: Resend activation code to email.
+        - /v1/users
+      summary: Resend activation code to email. Only super user and the owner of resouce can use this endpoint.
       security:
-        - bearerAuth:
-            -
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/userID"
       responses:
@@ -257,14 +353,18 @@ paths:
                   - $ref: "#/components/schemas/errorResponse"
         "400":
           $ref: "#/components/responses/badrequest"
-        "403":
+        "401":
           $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
   /v1/users/auth:
     post:
       tags:
-        - "v1"
+        - /v1/users
       summary: Login
-      description: Return token if login success
+      description: Return token if login success. Only guest can access this endpoint
+      security:
+        - bearerAuth: []
       requestBody:
         description: Login credentials
         required: true
@@ -306,15 +406,18 @@ paths:
                   - $ref: "#/components/schemas/errorResponse"
         "400":
           $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
   /v1/users/email/{email}:
     get:
       tags:
-        - "v1"
+        - /v1/users
       summary: Returns a user by email.
-      description: Return null data if no user has the email.
+      description: Return null data if no user has the email. Everyone can use this endpoint.
       security:
-        - bearerAuth:
-            -
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/userEmail"
       responses:
@@ -328,17 +431,18 @@ paths:
                   - $ref: "#/components/schemas/errorResponse"
         "400":
           $ref: "#/components/responses/badrequest"
-        "403":
+        "401":
           $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
   /v1/users/username/{username}:
     get:
       tags:
-        - "v1"
+        - /v1/users
       summary: Returns a user by username.
-      description: Return null data if no user has the email.
+      description: Return null data if no user has the email. Everyone can use this endpoint.
       security:
-        - bearerAuth:
-            -
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/userUsername"
       responses:
@@ -352,8 +456,35 @@ paths:
                   - $ref: "#/components/schemas/errorResponse"
         "400":
           $ref: "#/components/responses/badrequest"
-        "403":
+        "401":
           $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/users/username/{username}/posts:
+    get:
+      tags:
+        - /v1/users
+      summary: Returns a posts from user by username.
+      description: Return null posts if no user or user doesn't have post yet. Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/userUsername"
+      responses:
+        "200":
+          description: Return a JSON object of post if success true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/postsArray"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
 components:
   parameters:
     userID:
@@ -382,7 +513,17 @@ components:
         maxLength: 12
   responses:
     unauthorized:
-      description: Response when user doesn't allowed to use this endpoint, e.g. invalid token
+      description: Response when user has invalid bearer token , e.g. expired token, invalid signature, invalid format
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/errorResponse"
+    forbidden:
+      description: Response when user's role doesn't allowed to use this endpoint
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/errorResponse"
     badrequest:
       description: Response when request params is not satisfied, e.g. validation error
       content:
@@ -441,10 +582,13 @@ components:
           type: string
         birthday:
           type: string
-          format: date
-          pattern: YYYY-MM-DD
+          format: date RFC 3339
+          pattern: YYYY-MM-DDT00:00:00Z
         web_profile:
           type: string
+        photo_profile:
+          type: string
+          format: url
         activated:
           type: boolean
           default: false
@@ -479,3 +623,111 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/users"
+    posts:
+      type: object
+      properties:
+        id_post:
+          type: number
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        cover:
+          type: string
+          format: url
+        slug:
+          type: string
+        categories:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/categories"
+        tags:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/tags"
+        id_user:
+          type: number
+          format: int64
+        created_at:
+          type: string
+          description: RFC3339 datetime
+          format: date-time
+          example: "2021-08-21T00:00:00Z"
+        updated_at:
+          type: string
+          description: RFC3339 datetime
+          format: date-time
+          example: "2021-08-21T00:00:00Z"
+    postsArray:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          type: object
+          properties:
+            posts:
+              type: array
+              items:
+                $ref: "#/components/schemas/posts"
+    categories:
+      type: object
+      properties:
+        id_category:
+          type: number
+          format: int64
+        category:
+          type: string
+    categoriesArray:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          type: object
+          properties:
+            categories:
+              type: array
+              items:
+                $ref: "#/components/schemas/categories"
+    tags:
+      type: object
+      properties:
+        id_tag:
+          type: number
+          format: int64
+        tag:
+          type: string
+    tagsArray:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                $ref: "#/components/schemas/tags"
