@@ -66,7 +66,7 @@ func (r *Controller) authorized() gin.HandlerFunc {
 
 		if !ok {
 			log.Error(ctx, "unauthorized", c.MustGet("auth_role").(string), c.Request.URL.Path, c.Request.Method)
-			c.AbortWithStatus(http.StatusForbidden)
+			c.AbortWithStatusJSON(http.StatusForbidden, NewErrorResponse(apperror.Forbidden))
 			return
 		}
 		log.Info(ctx, "authorized", c.MustGet("auth_role").(string), c.Request.URL.Path, c.Request.Method)
