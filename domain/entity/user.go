@@ -18,7 +18,7 @@ type User struct {
 	City         string      `gorm:"type:varchar(50) not null"`                 //
 	Country      string      `gorm:"type:varchar(50) not null"`                 //
 	Birthday     time.Time   `gorm:"type:date not null"`                        //
-	PhotoProfile string      `gorm:"type:text null"`                            //
+	PhotoProfile string      `gorm:"type:text not null"`                        //
 	WebProfile   null.String `gorm:"type:text null"`                            //
 	Role         string      `gorm:"type:varchar(255) not null;default:admin"`  //
 	ActivatedAt  null.Time   `gorm:"default:null"`                              //
