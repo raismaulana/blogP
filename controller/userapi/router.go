@@ -55,7 +55,7 @@ func (r *Controller) RegisterRouter() {
 	r.Router.PUT("/v1/users/:id_user", r.authorized(), r.isMine(), r.updateUserHandler(r.UpdateUserInport))
 	r.Router.GET("/v1/users/:id_user/re-activation", r.authorized(), r.resetActivationUserHandler(r.ResetActivationUserInport)) // broken
 	r.Router.POST("/v1/users/auth", r.authorized(), r.loginUserHandler(r.LoginUserInport))
-	r.Router.PATCH("/v1/users/:id_user/password", r.isMine(), r.authorized(), r.updatePasswordHandler(r.UpdatePasswordInport))
+	r.Router.PATCH("/v1/users/:id_user/password", r.authorized(), r.isMine(), r.updatePasswordHandler(r.UpdatePasswordInport))
 	r.Router.POST("/v1/users/forgotpassword", r.authorized(), r.forgotPasswordHandler(r.ForgotPasswordInport))
 	r.Router.POST("/v1/users/:id_user/photo-profile", r.authorized(), r.isMine(), r.uploadUserPhotoProfileHandler(r.UploadUserPhotoProfileInport))
 }
