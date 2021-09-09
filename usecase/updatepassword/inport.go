@@ -13,7 +13,7 @@ type Inport interface {
 type InportRequest struct {
 	ID          int64  `uri:"id_user" binding:"required"`
 	OldPassword string `json:"old_password" binding:"required"`
-	NewPassword string `json:"new_password" bbinding:"required,min=6,max=255"`
+	NewPassword string `json:"new_password" bbinding:"required,min=6,max=25"`
 }
 
 // InportResponse is response payload after running the usecase UpdatePassword
