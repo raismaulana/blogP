@@ -175,6 +175,151 @@ paths:
           $ref: "#/components/responses/unauthorized"
         "403":
           $ref: "#/components/responses/forbidden"
+  /v1/posts:
+    get:
+      tags:
+        - /v1/posts
+      summary: Returns a list of posts.
+      description: Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Return a JSON array of posts if success true.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/postsArray"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    post:
+      tags:
+        - /v1/posts
+      summary: Create a new posts.
+      description: Only super user and admin can use this endpoint.
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref:  "#/components/requestBodies/posts"
+      responses:
+        "200":
+          description: OK.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/posts/{id_post}:
+    delete:
+      tags:
+        - /v1/posts
+      summary: Delete post.
+      description: Only super user and resource owner can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    get:
+      tags:
+        - /v1/posts
+      summary: Return a post.
+      description: Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/postID"
+      responses:
+        "200":
+          description: Post with content.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/postsDetailResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    put:
+      tags:
+        - /v1/posts
+      summary: Update posts.
+      description: Only super user and resource owner can use this endpoint.
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref:  "#/components/requestBodies/posts"
+      responses:
+        "200":
+          description: OK.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/posts/slug/{slug}:
+    get:
+      tags:
+        - /v1/posts
+      summary: Return a post by slug.
+      description: Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref:  "#/components/requestBodies/posts"
+      responses:
+        "200":
+          description: Post with content.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/postsDetailResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
   /v1/tags:
     get:
       tags:
@@ -778,6 +923,22 @@ components:
         type: integer
         format: int64
         minLength: 1
+    postID:
+      in: path
+      name: id_post
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minLength: 1
+    postSlug:
+      in: path
+      name: slug
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minLength: 1
     tagID:
       in: path
       name: id_tag
@@ -810,6 +971,47 @@ components:
         type: string
         minLength: 6
         maxLength: 12
+  requestBodies:
+    posts:
+      required: true
+      description: JSON request body for create and update posts
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                minLength: 5
+                maxLength: 20
+              description:
+                type: string
+                minLength: 5
+                maxLength: 50
+              content:
+                type: object
+                format: JSON Stringfy
+              cover:
+                type: string
+                format: url
+              slug:
+                type: string
+                minLength: 5
+                maxLength: 40
+              categories:
+                type: array
+                description: array of id categories
+                nullable: true
+                items:
+                    type: number
+                    format: int64, unique
+              tags:
+                type: array
+                description: array of id tags
+                nullable: true
+                items:
+                    type: number
+                    format: int64, unique
   responses:
     unauthorized:
       description: Response when user has invalid bearer token , e.g. expired token, invalid signature, invalid format
@@ -978,6 +1180,59 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/posts"
+    postsDetail:
+      type: object
+      properties:
+        id_post:
+          type: number
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        content:
+          type: object
+        cover:
+          type: string
+          format: url
+        slug:
+          type: string
+        categories:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/categories"
+        tags:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/tags"
+        id_user:
+          type: number
+          format: int64
+        created_at:
+          type: string
+          description: RFC3339 datetime
+          format: date-time
+          example: "2021-08-21T00:00:00Z"
+        updated_at:
+          type: string
+          description: RFC3339 datetime
+          format: date-time
+          example: "2021-08-21T00:00:00Z"
+    postsDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          $ref: "#/components/schemas/postsDetail"
     categories:
       type: object
       properties:
