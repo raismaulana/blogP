@@ -20,7 +20,6 @@ servers:
       port:
         default: "8080"
         description: edit port with your blogP server port
-
 paths:
   /ping:
     get:
@@ -34,6 +33,290 @@ paths:
               schema:
                 type: string
                 default: Ready
+  /v1/categories:
+    get:
+      tags:
+        - /v1/categories
+      summary: Returns a list of categories.
+      description: Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Return a JSON array of categories if success true.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/categoriesArray"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    post:
+      tags:
+        - /v1/categories
+      summary: Create a new category.
+      description: Only super user and admin can use this endpoint.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: JSON
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  minLength: 1
+                  maxLength: 50
+      responses:
+        "200":
+          description: Success if no duplicate categoriy.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/categories/{id_category}:
+    delete:
+      tags:
+        - /v1/categories
+      summary: Delete category.
+      description: Only super user can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/categoryID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    get:
+      tags:
+        - /v1/categories
+      summary: Return a category.
+      description: Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/categoryID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/categoriesResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    put:
+      tags:
+        - /v1/categories
+      summary: Create a new category.
+      description: Only super user and admin can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/categoryID"
+      requestBody:
+        required: true
+        description: JSON
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  minLength: 1
+                  maxLength: 50
+      responses:
+        "200":
+          description: Success if no duplicate categoriy.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/tags:
+    get:
+      tags:
+        - /v1/tags
+      summary: Returns a list of tags.
+      description: Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Return a JSON array of tags if success true.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/tagsArray"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    post:
+      tags:
+        - /v1/tags
+      summary: Create a new tag.
+      description: Only super user and admin can use this endpoint.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        description: JSON
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag:
+                  type: string
+                  minLength: 1
+                  maxLength: 15
+      responses:
+        "200":
+          description: Success if no duplicate categoriy.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+  /v1/tags/{id_tag}:
+    delete:
+      tags:
+        - /v1/tags
+      summary: Delete tag.
+      description: Only super user can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/tagID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    get:
+      tags:
+        - /v1/tags
+      summary: Return a tag.
+      description: Everyone can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/tagID"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/tagsResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
+    put:
+      tags:
+        - /v1/tags
+      summary: Create a new tag.
+      description: Only super user and admin can use this endpoint.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/tagID"
+      requestBody:
+        required: true
+        description: JSON
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag:
+                  type: string
+                  minLength: 1
+                  maxLength: 15
+      responses:
+        "200":
+          description: Success if no duplicate categoriy.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/successResponse"
+                  - $ref: "#/components/schemas/errorResponse"
+        "400":
+          $ref: "#/components/responses/badrequest"
+        "401":
+          $ref: "#/components/responses/unauthorized"
+        "403":
+          $ref: "#/components/responses/forbidden"
   /v1/users:
     get:
       tags:
@@ -122,7 +405,7 @@ paths:
           $ref: "#/components/responses/unauthorized"
         "403":
           $ref: "#/components/responses/forbidden"
-  /v1/users/{id}:
+  /v1/users/{id_user}:
     delete:
       tags:
         - /v1/users
@@ -221,7 +504,7 @@ paths:
           $ref: "#/components/responses/unauthorized"
         "403":
           $ref: "#/components/responses/forbidden"
-  /v1/users/{id}/activation:
+  /v1/users/{id_user}/activation:
     get:
       tags:
         - /v1/users
@@ -258,7 +541,7 @@ paths:
           $ref: "#/components/responses/unauthorized"
         "403":
           $ref: "#/components/responses/forbidden"
-  /v1/users/{id}/password:
+  /v1/users/{id_user}/password:
     patch:
       tags:
         - /v1/users
@@ -297,7 +580,7 @@ paths:
           $ref: "#/components/responses/unauthorized"
         "403":
           $ref: "#/components/responses/forbidden"
-  /v1/users/{id}/photo-profile:
+  /v1/users/{id_user}/photo-profile:
     post:
       tags:
         - /v1/users
@@ -333,7 +616,7 @@ paths:
           $ref: "#/components/responses/unauthorized"
         "403":
           $ref: "#/components/responses/forbidden"
-  /v1/users/{id}/re-activation:
+  /v1/users/{id_user}/re-activation:
     get:
       tags:
         - /v1/users
@@ -487,9 +770,25 @@ paths:
           $ref: "#/components/responses/forbidden"
 components:
   parameters:
+    categoryID:
+      in: path
+      name: id_category
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minLength: 1
+    tagID:
+      in: path
+      name: id_tag
+      required: true
+      schema:
+        type: integer
+        format: int64
+        minLength: 1
     userID:
       in: path
-      name: id
+      name: id_user
       required: true
       schema:
         type: integer
@@ -687,6 +986,19 @@ components:
           format: int64
         category:
           type: string
+    categoriesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          $ref: "#/components/schemas/categories"
     categoriesArray:
       type: object
       properties:
@@ -713,6 +1025,19 @@ components:
           format: int64
         tag:
           type: string
+    tagsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        errorCode:
+          type: string
+          default: ""
+        errorMessage:
+          type: string
+          default: ""
+        data:
+          $ref: "#/components/schemas/tags"
     tagsArray:
       type: object
       properties:
