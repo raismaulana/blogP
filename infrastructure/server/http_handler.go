@@ -47,7 +47,7 @@ func NewGinHTTPHandler(address string) (GinHTTPHandler, error) {
 		ExposeHeaders:   []string{"Data-Length"},
 		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"},
 		AllowAllOrigins: true,
-		AllowHeaders:    []string{"Content-Type", "Authorization"},
+		AllowHeaders:    []string{"Content-Type", "Authorization", "X-Requested-With"},
 		MaxAge:          12 * time.Hour,
 	}))
 
