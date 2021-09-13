@@ -17,4 +17,6 @@
 .vscode
 .editorconfig
 config.yaml
-/public/images/*.jpeg
+/public/images/*
+!/public/images/l60Hf.png
+

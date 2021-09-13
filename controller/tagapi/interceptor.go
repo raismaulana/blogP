@@ -73,3 +73,16 @@ func (r *Controller) authorized() gin.HandlerFunc {
 
 	}
 }
+
+// Interceptor for blocking unactivated account
+func (r *Controller) isActivated() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		switch c.MustGet("auth_role") {
+		case "admin":
+			if value, _ := c.MustGet("auth_activated").(bool); !value {
+				c.AbortWithStatusJSON(http.StatusForbidden, NewErrorResponse(apperror.OnlyActivatedAccountCanAccess))
+				return
+			}
+		}
+	}
+}

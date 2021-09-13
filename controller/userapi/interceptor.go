@@ -75,7 +75,9 @@ func (r *Controller) authorized() gin.HandlerFunc {
 	}
 }
 
-// interceptor for "only me who can access my resource"
+// Interceptor for "only me who can access my resource"
+// Will abort if the user is not the owner of resource
+// King will pass
 func (r *Controller) isMine() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		switch c.MustGet("auth_role") {
@@ -88,6 +90,19 @@ func (r *Controller) isMine() gin.HandlerFunc {
 			}
 			if c.MustGet("auth_id_user") != id_user {
 				c.AbortWithStatusJSON(http.StatusForbidden, NewErrorResponse(apperror.ProhibitedFromAccessingOtherPeoplesResources))
+				return
+			}
+		}
+	}
+}
+
+// Interceptor for blocking unactivated account
+func (r *Controller) isActivated() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		switch c.MustGet("auth_role") {
+		case "admin":
+			if value, _ := c.MustGet("auth_activated").(bool); !value {
+				c.AbortWithStatusJSON(http.StatusForbidden, NewErrorResponse(apperror.OnlyActivatedAccountCanAccess))
 				return
 			}
 		}

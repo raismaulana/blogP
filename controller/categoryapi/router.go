@@ -26,9 +26,9 @@ type Controller struct {
 
 // RegisterRouter registering all the router
 func (r *Controller) RegisterRouter() {
-	r.Router.POST("/v1/categories", r.authorized(), r.createCategoryHandler(r.CreateCategoryInport))
+	r.Router.POST("/v1/categories", r.authorized(), r.isActivated(), r.createCategoryHandler(r.CreateCategoryInport))
 	r.Router.GET("/v1/categories", r.authorized(), r.showAllCategoriesHandler(r.ShowAllCategoriesInport))
 	r.Router.GET("/v1/categories/:id_category", r.authorized(), r.showCategoryByIDHandler(r.ShowCategoryByIDInport))
-	r.Router.DELETE("/v1/categories/:id_category", r.authorized(), r.deleteCategoryHandler(r.DeleteCategoryInport))
-	r.Router.PUT("/v1/categories/:id_category", r.authorized(), r.updateCategoryHandler(r.UpdateCategoryInport))
+	r.Router.DELETE("/v1/categories/:id_category", r.authorized(), r.isActivated(), r.deleteCategoryHandler(r.DeleteCategoryInport))
+	r.Router.PUT("/v1/categories/:id_category", r.authorized(), r.isActivated(), r.updateCategoryHandler(r.UpdateCategoryInport))
 }

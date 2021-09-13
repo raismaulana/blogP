@@ -28,10 +28,10 @@ type Controller struct {
 
 // RegisterRouter registering all the router
 func (r *Controller) RegisterRouter() {
-	r.Router.POST("/v1/posts", r.authorized(), r.createPostHandler(r.CreatePostInport))
+	r.Router.POST("/v1/posts", r.authorized(), r.isActivated(), r.createPostHandler(r.CreatePostInport))
 	r.Router.GET("/v1/posts", r.authorized(), r.showAllPostsHandler(r.ShowAllPostsInport))
 	r.Router.GET("/v1/posts/:id_post", r.authorized(), r.showPostByIDHandler(r.ShowPostByIDInport))
 	r.Router.GET("/v1/posts/slug/:slug", r.authorized(), r.showPostBySlugHandler(r.ShowPostBySlugInport))
-	r.Router.PUT("/v1/posts/:id_post", r.authorized(), r.updatePostHandler(r.UpdatePostInport))
-	r.Router.DELETE("/v1/posts/:id_post", r.authorized(), r.deletePostHandler(r.DeletePostInport))
+	r.Router.PUT("/v1/posts/:id_post", r.authorized(), r.isActivated(), r.updatePostHandler(r.UpdatePostInport))
+	r.Router.DELETE("/v1/posts/:id_post", r.authorized(), r.isActivated(), r.deletePostHandler(r.DeletePostInport))
 }
