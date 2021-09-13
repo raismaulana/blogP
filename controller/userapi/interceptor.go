@@ -2,6 +2,7 @@ package userapi
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -79,7 +80,13 @@ func (r *Controller) isMine() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		switch c.MustGet("auth_role") {
 		case "admin":
-			if c.MustGet("auth_id_user") != c.Param("id_user") {
+			id_user, err := strconv.ParseInt(c.Param("id_user"), 10, 64)
+			if err != nil {
+				log.Error(c.Request.Context(), err.Error())
+				c.JSON(http.StatusNotFound, NewErrorResponse(apperror.NumberOnlyParam))
+				return
+			}
+			if c.MustGet("auth_id_user") != id_user {
 				c.AbortWithStatusJSON(http.StatusForbidden, NewErrorResponse(apperror.ProhibitedFromAccessingOtherPeoplesResources))
 				return
 			}
