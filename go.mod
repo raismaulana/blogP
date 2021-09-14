@@ -3,7 +3,7 @@ module github.com/raismaulana/blogP
 go 1.16
 
 require (
-	github.com/casbin/casbin/v2 v2.36.2 // indirect
+	github.com/casbin/casbin/v2 v2.36.2
 	github.com/fsnotify/fsnotify v1.5.0 // indirect
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.4
@@ -25,7 +25,7 @@ require (
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/guregu/null.v4 v4.0.0
-	gorm.io/datatypes v1.0.1 // indirect
+	gorm.io/datatypes v1.0.1
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/gorm v1.21.14
 	gorm.io/plugin/soft_delete v1.0.2 // indirect

@@ -7,8 +7,17 @@
 ```
 git clone http://gitub.com/raismaulana/blogP
 cd blogP
-go get -u
 go mod tidy
 go run main.go usingdb
+```
+Or using docker (development)
+```
+git clone http://gitub.com/raismaulana/blogP
+cd blogP
+go mod tidy
+go mod vendor
+docker build -t blogp:1.0.0 .
+docker container create --name blogp -p 8080:8080 blogp:1.0.0
+docker start -i blogp
 ```
 *NB: copy the config.yaml.example to config.yaml and edit the value based on your environment*
