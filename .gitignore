@@ -19,4 +19,4 @@ vendor/
 config.yaml
 /public/images/*
 !/public/images/l60Hf.png
-
+build/package/*
