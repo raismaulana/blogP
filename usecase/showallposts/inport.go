@@ -3,6 +3,8 @@ package showallposts
 import (
 	"context"
 	"time"
+
+	"github.com/raismaulana/blogP/infrastructure/database"
 )
 
 // Inport of ShowAllPosts
@@ -12,6 +14,7 @@ type Inport interface {
 
 // InportRequest is request payload to run the usecase ShowAllPosts
 type InportRequest struct {
+	PaginateRequest database.PaginateRequest `binding:"dive"`
 }
 
 // InportResponse is response payload after running the usecase ShowAllPosts

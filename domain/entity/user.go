@@ -22,8 +22,8 @@ type User struct {
 	WebProfile   null.String `gorm:"type:text null"`                            //
 	Role         string      `gorm:"type:varchar(255) not null;default:admin"`  //
 	ActivatedAt  null.Time   `gorm:"default:null"`                              //
-	CreatedAt    time.Time   ``                                                 //
-	UpdatedAt    time.Time   ``                                                 //
+	CreatedAt    time.Time   `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
+	UpdatedAt    time.Time   `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
 	Posts        []Post      ``                                                 //
 }
 

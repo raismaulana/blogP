@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/raismaulana/blogP/domain/repository"
+	"github.com/raismaulana/blogP/infrastructure/database"
 )
 
 //go:generate mockery --name Outport -output mocks/
@@ -25,7 +26,10 @@ func (r *showAllPostsInteractor) Execute(ctx context.Context, req InportRequest)
 	res := &InportResponse{}
 
 	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
-		postObj, err := r.outport.FetchPosts(ctx)
+		postObj, err := r.outport.FetchPosts(ctx, database.PaginateRequest{
+			Page:     req.PaginateRequest.Page,
+			PageSize: req.PaginateRequest.PageSize,
+		})
 		if err != nil {
 			return err
 		}

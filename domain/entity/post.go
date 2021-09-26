@@ -17,8 +17,8 @@ type Post struct {
 	Categories  []Category     `gorm:"many2many:post_categories;"`                //
 	Tags        []Tag          `gorm:"many2many:post_tags;"`                      //
 	UserID      int64          `gorm:"not null"`                                  //
-	CreatedAt   time.Time      ``                                                 //
-	UpdatedAt   time.Time      ``                                                 //
+	CreatedAt   time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
+	UpdatedAt   time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
 }
 
 type PostRequest struct {

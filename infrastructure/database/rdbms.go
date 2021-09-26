@@ -70,3 +70,28 @@ func ExtractDB(ctx context.Context) (*gorm.DB, error) {
 
 	return db, nil
 }
+
+type PaginateRequest struct {
+	Page     int `json:"page" form:"page" binding:"numeric"`
+	PageSize int `json:"page_size" form:"page_size" binding:"numeric"`
+}
+
+// Paginate is pagination offset technique
+func Paginate(req PaginateRequest) func(*gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		if req.Page == 0 && req.PageSize == 0 {
+			return db
+		}
+
+		if req.Page <= 0 {
+			req.Page = 1
+		}
+
+		if req.PageSize <= 0 {
+			req.PageSize = 10
+		}
+
+		offset := (req.Page - 1) * req.PageSize
+		return db.Offset(offset).Limit(req.PageSize)
+	}
+}

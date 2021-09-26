@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/raismaulana/blogP/domain/entity"
+	"github.com/raismaulana/blogP/infrastructure/database"
 )
 
 type SaveUserRepo interface {
@@ -104,7 +105,7 @@ type FindTagsByIDsRepo interface {
 }
 
 type FetchPostsRepo interface {
-	FetchPosts(ctx context.Context) ([]*entity.Post, error)
+	FetchPosts(ctx context.Context, paginate database.PaginateRequest) ([]*entity.Post, error)
 }
 
 type DeletePostRepo interface {
