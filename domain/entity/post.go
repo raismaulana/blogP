@@ -27,8 +27,10 @@ type Post struct {
 func PostSortableColumn() func(string) (string, string) {
 
 	var innerMap = map[string]string{
-		"oldest": "posts.created_at asc",
-		"newest": "posts.created_at desc",
+		"oldest":  "posts.created_at asc",
+		"newest":  "posts.created_at desc",
+		"popular": "posts.view_count desc",
+		"random":  "random()",
 	}
 
 	return func(s string) (string, string) {

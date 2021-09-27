@@ -29,6 +29,7 @@ type PostResponse struct {
 	Description string             `json:"description"` //
 	Cover       string             `json:"cover"`       //
 	Slug        string             `json:"slug"`        //
+	ViewCount   int64              `json:"view_count"`  //
 	Categories  []CategoryResponse `json:"categories"`  //
 	Tags        []TagResponse      `json:"tags"`        //
 	UserID      int64              `json:"id_user"`     //

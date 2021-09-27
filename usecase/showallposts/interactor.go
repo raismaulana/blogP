@@ -52,6 +52,7 @@ func (r *showAllPostsInteractor) Execute(ctx context.Context, req InportRequest)
 				Description: v.Description,
 				Cover:       v.Cover,
 				Slug:        v.Slug,
+				ViewCount:   v.ViewCount,
 				Categories:  vCategories,
 				Tags:        vTags,
 				UserID:      v.UserID,
