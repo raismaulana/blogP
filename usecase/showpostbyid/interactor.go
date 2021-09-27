@@ -25,12 +25,18 @@ func NewUsecase(outputPort Outport) Inport {
 func (r *showPostByIDInteractor) Execute(ctx context.Context, req InportRequest) (*InportResponse, error) {
 
 	res := &InportResponse{}
-
-	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
+	err := repository.WithTransaction(ctx, r.outport, func(ctx context.Context) error {
 		postObj, err := r.outport.FindPostByID(ctx, req.ID)
 		if err != nil {
 			return apperror.ObjectNotFound.Var(postObj)
 		}
+
+		postObj.UpdateViewCount()
+		err = r.outport.SavePost(ctx, postObj)
+		if err != nil {
+			return err
+		}
+
 		var vCategories []CategoryResponse
 		for _, v := range postObj.Categories {
 			vCategories = append(vCategories, CategoryResponse{
@@ -52,6 +58,7 @@ func (r *showPostByIDInteractor) Execute(ctx context.Context, req InportRequest)
 			Content:     json.RawMessage(postObj.Content),
 			Cover:       postObj.Cover,
 			Slug:        postObj.Slug,
+			ViewCount:   postObj.ViewCount,
 			Categories:  vCategories,
 			Tags:        vTags,
 			UserID:      postObj.UserID,

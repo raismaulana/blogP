@@ -26,11 +26,18 @@ func (r *showPostBySlugInteractor) Execute(ctx context.Context, req InportReques
 
 	res := &InportResponse{}
 
-	err := repository.ReadOnly(ctx, r.outport, func(ctx context.Context) error {
+	err := repository.WithTransaction(ctx, r.outport, func(ctx context.Context) error {
 		postObj, err := r.outport.FindPostBySlug(ctx, req.Slug)
 		if err != nil {
 			return apperror.ObjectNotFound.Var(postObj)
 		}
+
+		postObj.UpdateViewCount()
+		err = r.outport.SavePost(ctx, postObj)
+		if err != nil {
+			return err
+		}
+
 		var vCategories []CategoryResponse
 		for _, v := range postObj.Categories {
 			vCategories = append(vCategories, CategoryResponse{
@@ -52,6 +59,7 @@ func (r *showPostBySlugInteractor) Execute(ctx context.Context, req InportReques
 			Content:     json.RawMessage(postObj.Content),
 			Cover:       postObj.Cover,
 			Slug:        postObj.Slug,
+			ViewCount:   postObj.ViewCount,
 			Categories:  vCategories,
 			Tags:        vTags,
 			UserID:      postObj.UserID,
@@ -60,8 +68,10 @@ func (r *showPostBySlugInteractor) Execute(ctx context.Context, req InportReques
 		}
 		return nil
 	})
+
 	if err != nil {
 		return nil, err
 	}
+
 	return res, nil
 }

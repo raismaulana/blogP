@@ -14,6 +14,7 @@ type Post struct {
 	Content     datatypes.JSON `gorm:"not null"`                                  //
 	Cover       string         `gorm:"type:text not null"`                        //
 	Slug        string         `gorm:"type:varchar(255) not null unique"`         //
+	ViewCount   int64          `gorm:"not null;default:0"`                        //
 	Categories  []Category     `gorm:"many2many:post_categories;"`                //
 	Tags        []Tag          `gorm:"many2many:post_tags;"`                      //
 	UserID      int64          `gorm:"not null"`                                  //
@@ -103,4 +104,8 @@ func (r *Post) UpdatePost(req UpdatePostRequest) error {
 func (r *Post) DeleteAssociation() {
 	r.Categories = []Category{}
 	r.Tags = []Tag{}
+}
+
+func (r *Post) UpdateViewCount() {
+	r.ViewCount += 1
 }
