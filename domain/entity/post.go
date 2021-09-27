@@ -1,9 +1,11 @@
 package entity
 
 import (
+	"context"
 	"time"
 
 	"github.com/raismaulana/blogP/application/apperror"
+	"github.com/raismaulana/blogP/infrastructure/log"
 	"gorm.io/datatypes"
 )
 
@@ -20,6 +22,23 @@ type Post struct {
 	UserID      int64          `gorm:"not null"`                                  //
 	CreatedAt   time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
 	UpdatedAt   time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
+}
+
+func PostSortableColumn() func(string) (string, string) {
+
+	var innerMap = map[string]string{
+		"oldest": "posts.created_at asc",
+		"newest": "posts.created_at desc",
+	}
+
+	return func(s string) (string, string) {
+		sort, ok := innerMap[s]
+		log.Info(context.Background(), sort+"\n"+s, innerMap)
+		if !ok {
+			return "oldest", innerMap["oldest"]
+		}
+		return s, sort
+	}
 }
 
 type PostRequest struct {

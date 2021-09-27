@@ -19,7 +19,8 @@ type InportRequest struct {
 
 // InportResponse is response payload after running the usecase ShowAllPosts
 type InportResponse struct {
-	Posts []PostResponse `json:"posts"` //
+	database.PaginateRequest ``             //
+	Posts                    []PostResponse `json:"posts"` //
 }
 
 type PostResponse struct {

@@ -8,7 +8,7 @@ import (
 	"github.com/raismaulana/blogP/infrastructure/log"
 )
 
-func (r *RDBMSGateway) FetchPosts(ctx context.Context, paginate database.PaginateRequest) ([]*entity.Post, error) {
+func (r *RDBMSGateway) FetchPosts(ctx context.Context, paginate *database.PaginateRequest) ([]*entity.Post, error) {
 	log.Info(ctx, "called")
 
 	db, err := database.ExtractDB(ctx)
@@ -17,7 +17,16 @@ func (r *RDBMSGateway) FetchPosts(ctx context.Context, paginate database.Paginat
 	}
 
 	var objs []*entity.Post
-	err = db.Preload("Categories").Preload("Tags").Order("posts.created_at desc").Scopes(database.Paginate(paginate)).Find(&objs).Error
+	key, val := entity.PostSortableColumn()(paginate.Sort)
+	paginate.Sort = key
+	err = db.
+		Scopes(database.Paginate(paginate, db, objs)).
+		Preload("Categories").
+		Preload("Tags").
+		Order(val).
+		Find(&objs).
+		Error
+
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err

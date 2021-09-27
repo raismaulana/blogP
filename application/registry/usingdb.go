@@ -49,6 +49,7 @@ import (
 	"github.com/raismaulana/blogP/usecase/uploaduserphotoprofile"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type usingdb struct {
@@ -177,7 +178,9 @@ func setupDB(env *envconfig.EnvConfig) *gorm.DB {
 		env.DBName,
 		env.DBPort,
 	)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		panic("failed to connect database")
 	}

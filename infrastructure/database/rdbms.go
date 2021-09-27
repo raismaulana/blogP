@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"math"
 
 	"github.com/raismaulana/blogP/application/apperror"
 	"github.com/raismaulana/blogP/infrastructure/log"
@@ -72,23 +73,36 @@ func ExtractDB(ctx context.Context) (*gorm.DB, error) {
 }
 
 type PaginateRequest struct {
-	Page     int `json:"page" form:"page" binding:"numeric"`
-	PageSize int `json:"page_size" form:"page_size" binding:"numeric"`
+	Page       int    `json:"page" form:"page" binding:"numeric"`           //
+	PageSize   int    `json:"page_size" form:"page_size" binding:"numeric"` //
+	Sort       string `json:"sort" form:"sort"`                             //
+	TotalRows  int64  `json:"total_rows"`
+	TotalPages int    `json:"total_pages"`
 }
 
 // Paginate is pagination offset technique
-func Paginate(req PaginateRequest) func(*gorm.DB) *gorm.DB {
+func Paginate(req *PaginateRequest, db *gorm.DB, table interface{}) func(*gorm.DB) *gorm.DB {
+	if req.Page <= 0 && req.PageSize <= 0 {
+		req.Page = 0
+		req.PageSize = 0
+	}
+
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+
+	if req.PageSize <= 0 {
+		req.PageSize = 10
+	}
+	var totalRows int64
+	db.Model(table).Count(&totalRows)
+	req.TotalRows = totalRows
+	totalPages := int(math.Ceil(float64(totalRows) / float64(req.PageSize)))
+	req.TotalPages = totalPages
+
 	return func(db *gorm.DB) *gorm.DB {
-		if req.Page == 0 && req.PageSize == 0 {
+		if req.Page <= 0 && req.PageSize <= 0 {
 			return db
-		}
-
-		if req.Page <= 0 {
-			req.Page = 1
-		}
-
-		if req.PageSize <= 0 {
-			req.PageSize = 10
 		}
 
 		offset := (req.Page - 1) * req.PageSize
