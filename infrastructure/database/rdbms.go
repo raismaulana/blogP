@@ -85,21 +85,21 @@ func Paginate(req *PaginateRequest, db *gorm.DB, table interface{}) func(*gorm.D
 	if req.Page <= 0 && req.PageSize <= 0 {
 		req.Page = 0
 		req.PageSize = 0
-	}
+	} else {
 
-	if req.Page <= 0 {
-		req.Page = 1
-	}
+		if req.Page <= 0 {
+			req.Page = 1
+		}
 
-	if req.PageSize <= 0 {
-		req.PageSize = 10
+		if req.PageSize <= 0 {
+			req.PageSize = 10
+		}
+		var totalRows int64
+		db.Model(table).Count(&totalRows)
+		req.TotalRows = totalRows
+		totalPages := int(math.Ceil(float64(totalRows) / float64(req.PageSize)))
+		req.TotalPages = totalPages
 	}
-	var totalRows int64
-	db.Model(table).Count(&totalRows)
-	req.TotalRows = totalRows
-	totalPages := int(math.Ceil(float64(totalRows) / float64(req.PageSize)))
-	req.TotalPages = totalPages
-
 	return func(db *gorm.DB) *gorm.DB {
 		if req.Page <= 0 && req.PageSize <= 0 {
 			return db
