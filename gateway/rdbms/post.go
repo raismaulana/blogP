@@ -17,7 +17,7 @@ func (r *RDBMSGateway) FetchPosts(ctx context.Context, paginate database.Paginat
 	}
 
 	var objs []*entity.Post
-	err = db.Preload("Categories").Preload("Tags").Order("posts.updated_at desc").Scopes(database.Paginate(paginate)).Find(&objs).Error
+	err = db.Preload("Categories").Preload("Tags").Order("posts.created_at desc").Scopes(database.Paginate(paginate)).Find(&objs).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
