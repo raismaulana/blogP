@@ -62,6 +62,7 @@ func (r *showPostByIDInteractor) Execute(ctx context.Context, req InportRequest)
 			Categories:  vCategories,
 			Tags:        vTags,
 			UserID:      postObj.UserID,
+			AuthorName:  postObj.User.Name,
 			CreatedAt:   postObj.CreatedAt,
 			UpdatedAt:   postObj.UpdatedAt,
 		}

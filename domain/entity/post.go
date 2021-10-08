@@ -20,6 +20,7 @@ type Post struct {
 	Categories  []Category     `gorm:"many2many:post_categories;"`                //
 	Tags        []Tag          `gorm:"many2many:post_tags;"`                      //
 	UserID      int64          `gorm:"not null"`                                  //
+	User        User           ``                                                 //
 	CreatedAt   time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
 	UpdatedAt   time.Time      `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
 }

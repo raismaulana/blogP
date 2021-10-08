@@ -21,6 +21,7 @@ func (r *RDBMSGateway) FetchPosts(ctx context.Context, paginate *database.Pagina
 	paginate.Sort = key
 	err = db.
 		Scopes(database.Paginate(paginate, db, objs)).
+		Preload("User").
 		Preload("Categories").
 		Preload("Tags").
 		Order(val).
@@ -78,7 +79,7 @@ func (r *RDBMSGateway) FindPostBySlug(ctx context.Context, slug string) (*entity
 	}
 
 	var postObj entity.Post
-	err = db.Where("slug = ?", slug).Preload("Categories").Preload("Tags").First(&postObj).Error
+	err = db.Where("slug = ?", slug).Preload("User").Preload("Categories").Preload("Tags").First(&postObj).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err
@@ -95,7 +96,7 @@ func (r *RDBMSGateway) FindPostByID(ctx context.Context, id int64) (*entity.Post
 	}
 
 	var postObj entity.Post
-	err = db.Where("id_post = ?", id).Preload("Categories").Preload("Tags").First(&postObj).Error
+	err = db.Where("id_post = ?", id).Preload("User").Preload("Categories").Preload("Tags").First(&postObj).Error
 	if err != nil {
 		log.Error(ctx, err.Error())
 		return nil, err

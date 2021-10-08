@@ -28,6 +28,7 @@ type InportResponse struct {
 	Categories  []CategoryResponse `json:"categories"`  //
 	Tags        []TagResponse      `json:"tags"`        //
 	UserID      int64              `json:"id_user"`     //
+	AuthorName  string             `json:"author_name"` //
 	CreatedAt   time.Time          `json:"created_at"`  //
 	UpdatedAt   time.Time          `json:"updated_at"`  //
 }

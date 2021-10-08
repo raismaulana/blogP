@@ -56,6 +56,7 @@ func (r *showAllPostsInteractor) Execute(ctx context.Context, req InportRequest)
 				Categories:  vCategories,
 				Tags:        vTags,
 				UserID:      v.UserID,
+				AuthorName:  v.User.Name,
 				CreatedAt:   v.CreatedAt,
 				UpdatedAt:   v.UpdatedAt,
 			})
