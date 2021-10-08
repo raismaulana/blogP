@@ -41,7 +41,7 @@ func (r *RDBMSGateway) CreatePost(ctx context.Context, obj *entity.Post) error {
 		return err
 	}
 
-	err = db.Omit("Categories.*,Tags.*").Create(obj).Error
+	err = db.Omit("Categories.*,Tags.*").Save(obj).Error
 	if err != nil {
 		return err
 	}
