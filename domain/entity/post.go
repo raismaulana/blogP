@@ -11,7 +11,7 @@ import (
 
 type Post struct {
 	ID          int64          `gorm:"primary_key:auto_increment;column:id_post"` //
-	Title       string         `gorm:"type:varchar(100) not null"`                //
+	Title       string         `gorm:"type:varchar(155) not null"`                //
 	Description string         `gorm:"type:varchar(255) not null"`                //
 	Content     datatypes.JSON `gorm:"not null"`                                  //
 	Cover       string         `gorm:"type:text not null"`                        //
