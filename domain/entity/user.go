@@ -11,16 +11,16 @@ import (
 
 type User struct {
 	ID           int64       `gorm:"primary_key:auto_increment;column:id_user"` //
-	Username     string      `gorm:"type:varchar(12) unique not null"`          //
-	Name         string      `gorm:"type:varchar(20) not null"`                 //
-	Email        string      `gorm:"type:varchar(45) unique not null"`          //
-	Password     string      `gorm:"type:varchar(255) not null"`                //
-	City         string      `gorm:"type:varchar(50) not null"`                 //
-	Country      string      `gorm:"type:varchar(50) not null"`                 //
-	Birthday     time.Time   `gorm:"type:date not null"`                        //
-	PhotoProfile string      `gorm:"type:text not null"`                        //
-	WebProfile   null.String `gorm:"type:text null"`                            //
-	Role         string      `gorm:"type:varchar(255) not null;default:admin"`  //
+	Username     string      `gorm:"type:varchar(12);unique;not null"`          //
+	Name         string      `gorm:"type:varchar(20);not null"`                 //
+	Email        string      `gorm:"type:varchar(45);unique;not null"`          //
+	Password     string      `gorm:"type:varchar(255);not null"`                //
+	City         string      `gorm:"type:varchar(50);not null"`                 //
+	Country      string      `gorm:"type:varchar(50);not null"`                 //
+	Birthday     time.Time   `gorm:"type:date;not null"`                        //
+	PhotoProfile string      `gorm:"type:text;not null"`                        //
+	WebProfile   null.String `gorm:"type:text"`                                 //
+	Role         string      `gorm:"type:varchar(255);not null;default:admin"`  //
 	ActivatedAt  null.Time   `gorm:"default:null"`                              //
 	CreatedAt    time.Time   `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
 	UpdatedAt    time.Time   `gorm:"not null;default:CURRENT_TIMESTAMP"`        //
