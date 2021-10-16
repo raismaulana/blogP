@@ -9,9 +9,9 @@ import (
 
 type Tag struct {
 	ID        int64     `gorm:"primary_key:auto_increment;column:id_tag"` //
-	Tag       string    `gorm:"type: varchar(200) not null unique"`
-	CreatedAt time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"` //
-	UpdatedAt time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"` //
+	Tag       string    `gorm:"type: varchar(200) not null unique"`       //
+	CreatedAt time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"`       //
+	UpdatedAt time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"`       //
 }
 type TagRequest struct {
 	Tag string `` //

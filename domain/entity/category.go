@@ -7,10 +7,10 @@ import (
 )
 
 type Category struct {
-	ID        int64     `gorm:"primary_key:auto_increment;column:id_category"` //
-	Category  string    `gorm:"type:varchar(200);not null;uniqueIndex:tags_category_key"`
-	CreatedAt time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"` //
-	UpdatedAt time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"` //
+	ID        int64     `gorm:"primary_key:auto_increment;column:id_category"`            //
+	Category  string    `gorm:"type:varchar(200);not null;uniqueIndex:tags_category_key"` //
+	CreatedAt time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"`                       //
+	UpdatedAt time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"`                       //
 }
 type CategoryRequest struct {
 	Category string `` //
