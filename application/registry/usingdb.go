@@ -189,7 +189,7 @@ func setupDB(env *envconfig.EnvConfig) *gorm.DB {
 
 func setupRedis(env *envconfig.EnvConfig) *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     env.RedisHost + ":" + env.RedisPort,
+		Addr:     env.RedisHost + env.RedisPort,
 		Password: env.RedisPassword,
 		DB:       env.RedisDB,
 	})
